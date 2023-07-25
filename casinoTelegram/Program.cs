@@ -21,7 +21,10 @@ namespace casinoTelegram
         async static Task Update(ITelegramBotClient client, Update update, CancellationToken token)
         {
             var message = update.Message;
-            if(message.Text != null)
+
+            Console.WriteLine($"{message.Chat.FirstName ?? "-no name-"}\t\t|\t{message.Text ?? "-no text-"}");
+
+            if (message.Text != null)
             {
                 await client.SendTextMessageAsync(message.Chat.Id, $"Ты написал - {message.Text}");
                 return;
