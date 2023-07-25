@@ -29,7 +29,7 @@ namespace casinoTelegram
         {
             var message = update.Message;
 
-            Console.WriteLine($"{message.Chat.FirstName ?? "-no name-"}\t\t|\t{message.Text ?? "-no text-"}");
+            Console.WriteLine($"{message.Chat.FirstName ?? "--no name--"}\t\t|\t{message.Text ?? "--no text--"}");
 
             if (message.Text != null)
             {
@@ -57,7 +57,7 @@ namespace casinoTelegram
                     currentState = BotState.Game;
                     break;
                 default:
-                    await client.SendTextMessageAsync(message.Chat.Id, "Я не понимаю вашей команды. Введите /start для начала или /play для игры.");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Я не понимаю вашей команды. Введите /play для игры.");
                     break;
             }
         }
