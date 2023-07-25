@@ -9,6 +9,7 @@ namespace casinoTelegram
 {
     internal class Program
     {
+        // Определение возможных состояний бота
         private enum BotState
         {
             Default,
@@ -18,18 +19,24 @@ namespace casinoTelegram
             MySurvey
         }
 
+        // Текущее состояние бота (по умолчанию - Default)
         private static BotState currentState = BotState.Default;
+
+        // Переменные для игры
         private static int targetNumber;
         private static int maxNumber;
+
+        // Словарь для хранения данных пользователей
         private static Dictionary<long, UserData> userDataDict = new Dictionary<long, UserData>();
 
+        // Класс для хранения данных пользователя
         private class UserData
         {
             public string FirstName;
             public string LastName;
             public int Age;
             public int LuckyNumber;
-            public int State; // Добавлено поле State
+            public int State; // Поле для отслеживания состояния анкеты
         }
 
         static void Main(string[] args)
@@ -38,7 +45,6 @@ namespace casinoTelegram
             client.StartReceiving(Update, Error);
             Console.WriteLine("Бот запущен. Нажмите любую клавишу, чтобы остановить.");
             Console.ReadKey();
- 
         }
 
         async static Task Update(ITelegramBotClient client, Update update, CancellationToken token)
@@ -70,6 +76,7 @@ namespace casinoTelegram
             }
         }
 
+        // Обработчик состояния Default
         async static Task HandleDefaultState(ITelegramBotClient client, Message message)
         {
             switch (message.Text)
@@ -86,11 +93,12 @@ namespace casinoTelegram
                     currentState = BotState.MySurvey;
                     break;
                 default:
-                    await client.SendTextMessageAsync(message.Chat.Id, "Я не понимаю вашей команды. Введите /start для начала, /play для игры, или /survey для заполнения анкеты.");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Я не понимаю вашей команды. Введите /play для игры или /survey для заполнения анкеты.");
                     break;
             }
         }
 
+        // Обработчик состояния ChooseRange
         async static Task HandleChooseRangeState(ITelegramBotClient client, Message message)
         {
             switch (message.Text)
@@ -113,13 +121,14 @@ namespace casinoTelegram
             }
         }
 
+        // Обработчик состояния Game
         async static Task HandleGameState(ITelegramBotClient client, Message message)
         {
             if (int.TryParse(message.Text, out int guessedNumber))
             {
                 if (guessedNumber == targetNumber)
                 {
-                    await client.SendTextMessageAsync(message.Chat.Id, "Поздравляю! Вы угадали число!");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Поздравляю! Вы угадали число! ");
                     currentState = BotState.Default;
                 }
                 else if (guessedNumber < targetNumber)
@@ -137,6 +146,7 @@ namespace casinoTelegram
             }
         }
 
+        // Обработчик состояния GameUpTo10
         async static Task HandleGameUpTo10State(ITelegramBotClient client, Message message)
         {
             if (int.TryParse(message.Text, out int guessedNumber))
@@ -157,6 +167,7 @@ namespace casinoTelegram
             }
         }
 
+        // Обработчик состояния MySurvey
         async static Task HandleMySurveyState(ITelegramBotClient client, Message message)
         {
             long chatId = message.Chat.Id;
