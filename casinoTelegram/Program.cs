@@ -9,44 +9,55 @@ namespace casinoTelegram
 {
     internal class Program
     {
-        // Определение возможных состояний бота
+        /// <summary>
+        /// Определение возможных состояний бота
+        /// </summary>
         private enum BotState
         {
-            Default,
-            ChooseRange,
-            Game,
-            GameUpTo10,
-            MySurvey
+            Default, // стандартное значение
+            ChooseRange, // выбор диапозона для игры
+            Game, // процесс игры до 100
+            GameUpTo10, // процесс игры до 10
+            MySurvey // процесс заполнения данных о пользователе
         }
 
         // Текущее состояние бота (по умолчанию - Default)
         private static BotState currentState = BotState.Default;
 
         // Переменные для игры
-        private static int targetNumber;
-        private static int maxNumber;
+        private static int targetNumber; // загаданное число
+        private static int maxNumber; // максимальное число
 
-        // Словарь для хранения данных пользователей
+        // Словарь для хранения данных пользователей (айди пользователя и его состояния )
         private static Dictionary<long, UserData> userDataDict = new Dictionary<long, UserData>();
 
-        // Класс для хранения данных пользователя
+        /// <summary>
+        /// Класс для хранения данных пользователя
+        /// </summary>
         private class UserData
         {
-            public string FirstName;
-            public string LastName;
-            public int Age;
-            public int LuckyNumber;
+            public string FirstName; // имя
+            public string LastName; // фамилия
+            public int Age; // возраст
+            public int LuckyNumber; // счастливое число
             public int State; // Поле для отслеживания состояния анкеты
         }
 
         static void Main(string[] args)
         {
-            var client = new TelegramBotClient("6254402236:AAF-lAzwr4E1XjicyVw_Y6ENLNsilvAZwJM");
-            client.StartReceiving(Update, Error);
+            var client = new TelegramBotClient("6254402236:AAF-lAzwr4E1XjicyVw_Y6ENLNsilvAZwJM"); // создание бота с нашим токеном
+            client.StartReceiving(Update, Error); // запуск бота
             Console.WriteLine("Бот запущен. Нажмите любую клавишу, чтобы остановить.");
-            Console.ReadKey();
+            Console.ReadKey(); // бот работает, пока не будет нажата любая кнопка в консоле 
         }
 
+        /// <summary>
+        /// Основной метод отлова и обработки сообщений
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="update"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         async static Task Update(ITelegramBotClient client, Update update, CancellationToken token)
         {
             var message = update.Message;
@@ -76,7 +87,12 @@ namespace casinoTelegram
             }
         }
 
-        // Обработчик состояния Default
+        /// <summary>
+        /// Обработчик состояния Default
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         async static Task HandleDefaultState(ITelegramBotClient client, Message message)
         {
             switch (message.Text)
@@ -98,7 +114,12 @@ namespace casinoTelegram
             }
         }
 
-        // Обработчик состояния ChooseRange
+        /// <summary>
+        /// Обработчик состояния ChooseRange
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         async static Task HandleChooseRangeState(ITelegramBotClient client, Message message)
         {
             switch (message.Text)
@@ -121,7 +142,12 @@ namespace casinoTelegram
             }
         }
 
-        // Обработчик состояния Game
+        /// <summary>
+        /// Обработчик состояния Game
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         async static Task HandleGameState(ITelegramBotClient client, Message message)
         {
             if (int.TryParse(message.Text, out int guessedNumber))
@@ -146,7 +172,12 @@ namespace casinoTelegram
             }
         }
 
-        // Обработчик состояния GameUpTo10
+        /// <summary>
+        /// Обработчик состояния GameUpTo10
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         async static Task HandleGameUpTo10State(ITelegramBotClient client, Message message)
         {
             if (int.TryParse(message.Text, out int guessedNumber))
@@ -167,7 +198,12 @@ namespace casinoTelegram
             }
         }
 
-        // Обработчик состояния MySurvey
+        /// <summary>
+        /// Обработчик состояния MySurvey
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         async static Task HandleMySurveyState(ITelegramBotClient client, Message message)
         {
             long chatId = message.Chat.Id;
@@ -206,6 +242,14 @@ namespace casinoTelegram
             }
         }
 
+        /// <summary>
+        /// Метод отлова ошибок
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="exception"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         private static Task Error(ITelegramBotClient client, Exception exception, CancellationToken token)
         {
             throw new NotImplementedException();
