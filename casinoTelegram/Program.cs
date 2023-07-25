@@ -66,7 +66,7 @@ namespace casinoTelegram
                     currentState = BotState.ChooseRange;
                     break;
                 default:
-                    await client.SendTextMessageAsync(message.Chat.Id, "Я не понимаю вашей команды. Введите /start для начала или /play для игры.");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Я не понимаю вашей команды. Введите /play для игры.");
                     break;
             }
         }
