@@ -144,6 +144,10 @@ namespace casinoTelegram
                     await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали диапазон от 1 до {maxNumber}. Давайте начнем игру! Отгадайте число от 1 до {maxNumber}. Введите число:");
                     currentState = BotState.GameTo100;
                     break;
+                case "/cancel":
+                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                    currentState = BotState.Default;
+                    break;
                 default:
                     await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, выберите 1 или 2 для выбора диапазона.");
                     break;
@@ -180,7 +184,12 @@ namespace casinoTelegram
             }
             else
             {
-                await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число.");
+                if (message.Text == "/cancel")
+                {
+                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                    currentState = BotState.Default;
+                }
+                else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число.");
             }
         }
 
@@ -211,7 +220,12 @@ namespace casinoTelegram
             }
             else
             {
-                await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число.");
+                if (message.Text == "/cancel")
+                {
+                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                    currentState = BotState.Default;
+                }
+                else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число.");
             }
         }
 
