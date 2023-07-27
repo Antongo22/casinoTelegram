@@ -19,7 +19,7 @@ namespace casinoTelegram
         {
             Default, // стандартное значение
             ChooseRange, // выбор диапозона для игры
-            Game, // процесс игры до 100
+            GameTo100, // процесс игры до 100
             GameUpTo10, // процесс игры до 10
         }
 
@@ -84,8 +84,8 @@ namespace casinoTelegram
                     case BotState.ChooseRange:
                         await HandleChooseRangeState(client, message);
                         break;
-                    case BotState.Game:
-                        await HandleGameState(client, message);
+                    case BotState.GameTo100:
+                        await HandleGameTo100State(client, message);
                         break;
                     case BotState.GameUpTo10:
                         await HandleGameUpTo10State(client, message);
@@ -94,45 +94,6 @@ namespace casinoTelegram
             }
         }
     
-        /// <summary>
-        /// Пополнение очков пользователя
-        /// </summary>
-        /// <param name="chatId"></param>
-        /// <param name="points"></param>
-        private static void UpdatePointsInDB(long chatId, int points)
-        {
-            string query = $"IF EXISTS (SELECT * FROM [Points] WHERE [UserID] = '{chatId}') " +
-                           $"UPDATE [Points] SET [Points] = [Points] + {points} WHERE [UserID] = '{chatId}' " +
-                           $"ELSE INSERT INTO [Points] ([UserID], [Points]) VALUES ('{chatId}', {points})";
-
-            using (SqlCommand command = new SqlCommand(query, SQLconnection))
-            {
-                command.ExecuteNonQuery();
-            }
-        }
-
-        /// <summary>
-        /// Получение баллов пользователя
-        /// </summary>
-        /// <param name="chatId"></param>
-        /// <returns></returns>
-        private static int GetPointsFromDB(long chatId)
-        {
-            int points = 0;
-            string query = $"SELECT [Points] FROM [Points] WHERE [UserID] = '{chatId}'";
-
-            using (SqlCommand command = new SqlCommand(query, SQLconnection))
-            using (SqlDataReader reader = command.ExecuteReader())
-            {
-                if (reader.Read())
-                {
-                    points = reader.GetInt32(0);
-                }
-            }
-
-            return points;
-        }
-
         /// <summary>
         /// Обработчик состояния Default
         /// </summary>
@@ -151,7 +112,6 @@ namespace casinoTelegram
                     currentState = BotState.ChooseRange;
                     break;
                 case "/points":
-                    // Обработка команды для показа баллов
                     long chatId = message.Chat.Id;
                     int points = GetPointsFromDB(chatId);
                     await client.SendTextMessageAsync(chatId, $"У вас {points} балл(ов).");
@@ -182,7 +142,7 @@ namespace casinoTelegram
                     maxNumber = 100;
                     targetNumber = new Random().Next(1, maxNumber + 1);
                     await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали диапазон от 1 до {maxNumber}. Давайте начнем игру! Отгадайте число от 1 до {maxNumber}. Введите число:");
-                    currentState = BotState.Game;
+                    currentState = BotState.GameTo100;
                     break;
                 default:
                     await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, выберите 1 или 2 для выбора диапазона.");
@@ -196,7 +156,7 @@ namespace casinoTelegram
         /// <param name="client"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        async static Task HandleGameState(ITelegramBotClient client, Message message)
+        async static Task HandleGameTo100State(ITelegramBotClient client, Message message)
         {
             if (int.TryParse(message.Text, out int guessedNumber))
             {
@@ -205,7 +165,7 @@ namespace casinoTelegram
                     await client.SendTextMessageAsync(message.Chat.Id, "Поздравляю! Вы угадали число! ");
 
                     long chatId = message.Chat.Id;
-                    UpdatePointsInDB(chatId, 1); // Добавляем 1 балл пользователю
+                    UpdatePointsInDB(chatId, 1);
 
                     currentState = BotState.Default;
                 }
@@ -239,7 +199,7 @@ namespace casinoTelegram
                     await client.SendTextMessageAsync(message.Chat.Id, "Поздравляю! Вы угадали число!");
 
                     long chatId = message.Chat.Id;
-                    UpdatePointsInDB(chatId, 1); // Добавляем 1 балл пользователю
+                    UpdatePointsInDB(chatId, 1);
 
                     currentState = BotState.Default;
                 }
@@ -253,8 +213,47 @@ namespace casinoTelegram
             {
                 await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число.");
             }
-        }    
-        
+        }
+
+        /// <summary>
+        /// Пополнение очков пользователя
+        /// </summary>
+        /// <param name="chatId"></param>
+        /// <param name="points"></param>
+        private static void UpdatePointsInDB(long chatId, int points)
+        {
+            string query = $"IF EXISTS (SELECT * FROM [Points] WHERE [UserID] = '{chatId}') " +
+                           $"UPDATE [Points] SET [Points] = [Points] + {points} WHERE [UserID] = '{chatId}' " +
+                           $"ELSE INSERT INTO [Points] ([UserID], [Points]) VALUES ('{chatId}', {points})";
+
+            using (SqlCommand command = new SqlCommand(query, SQLconnection))
+            {
+                command.ExecuteNonQuery();
+            }
+        }
+
+        /// <summary>
+        /// Получение баллов пользователя
+        /// </summary>
+        /// <param name="chatId"></param>
+        /// <returns></returns>
+        private static int GetPointsFromDB(long chatId)
+        {
+            int points = 0;
+            string query = $"SELECT [Points] FROM [Points] WHERE [UserID] = '{chatId}'";
+
+            using (SqlCommand command = new SqlCommand(query, SQLconnection))
+            using (SqlDataReader reader = command.ExecuteReader())
+            {   
+                if (reader.Read())
+                {
+                    points = reader.GetInt32(0);
+                }
+            }
+
+            return points;
+        }
+
 
         /// <summary>
         /// Метод отлова ошибок
