@@ -46,13 +46,14 @@ namespace casinoTelegram
             public int State; // Поле для отслеживания состояния анкеты
         }
 
-        private static SqlConnection SQLconnection = null;
+        private static SqlConnection SQLconnection = null; // Ссылка на БД с очками
 
         static void Main(string[] args)
         {
-            SQLconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["PointsDB"].ConnectionString); 
-            SQLconnection.Open();
+            SQLconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["PointsDB"].ConnectionString); // Подключение к базе
+            SQLconnection.Open(); // ОТкрытие для программмы базу
             
+            // Проверка подключения
             if (SQLconnection.State == ConnectionState.Open)
             {
                 Console.WriteLine("Подключено");
