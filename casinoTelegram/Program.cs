@@ -59,8 +59,6 @@ namespace casinoTelegram
                 Console.WriteLine("База данных \"PointsDB\" подключена!");
             }
 
-            Console.ReadKey();
-
             var client = new TelegramBotClient("6254402236:AAF-lAzwr4E1XjicyVw_Y6ENLNsilvAZwJM"); // создание бота с нашим токеном
             client.StartReceiving(Update, Error); // запуск бота
             Console.WriteLine("Бот запущен. Нажмите любую клавишу, чтобы остановить.");
@@ -115,6 +113,22 @@ namespace casinoTelegram
                 command.ExecuteNonQuery();
             }
         }
+        private static int GetPointsFromDB(long chatId)
+        {
+            int points = 0;
+            string query = $"SELECT [Points] FROM [Points] WHERE [UserID] = '{chatId}'";
+
+            using (SqlCommand command = new SqlCommand(query, SQLconnection))
+            using (SqlDataReader reader = command.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    points = reader.GetInt32(0);
+                }
+            }
+
+            return points;
+        }
 
         /// <summary>
         /// Обработчик состояния Default
@@ -127,7 +141,7 @@ namespace casinoTelegram
             switch (message.Text)
             {
                 case "/start":
-                    await client.SendTextMessageAsync(message.Chat.Id, "Привет! Добро пожаловать в наше казино! Введите /play, чтобы начать игру, или /survey, чтобы заполнить анкету.");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Привет! Добро пожаловать в наше казино! Введите /play, чтобы начать игру, или /survey, чтобы заполнить анкету. /points для того, чтобы узнать своё количество очков.");
                     break;
                 case "/play":
                     await client.SendTextMessageAsync(message.Chat.Id, "Выберите диапазон чисел:\n1. От 1 до 10\n2. От 1 до 100");
@@ -137,8 +151,14 @@ namespace casinoTelegram
                     await client.SendTextMessageAsync(message.Chat.Id, "Давайте заполним вашу анкету. Введите ваше имя:");
                     currentState = BotState.MySurvey;
                     break;
+                case "/points":
+                    // Обработка команды для показа баллов
+                    long chatId = message.Chat.Id;
+                    int points = GetPointsFromDB(chatId);
+                    await client.SendTextMessageAsync(chatId, $"У вас {points} балл(ов).");
+                    break;
                 default:
-                    await client.SendTextMessageAsync(message.Chat.Id, "Я не понимаю вашей команды. Введите /play для игры или /survey для заполнения анкеты.");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Я не понимаю вашей команды. Введите /play для игры или /survey для заполнения анкеты. /points для того, чтобы узнать своё количество очков.");
                     break;
             }
         }
