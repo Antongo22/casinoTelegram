@@ -4,6 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace casinoTelegram
 {
@@ -43,8 +46,19 @@ namespace casinoTelegram
             public int State; // Поле для отслеживания состояния анкеты
         }
 
+        private static SqlConnection SQLconnection = null;
+
         static void Main(string[] args)
         {
+            SQLconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["PointsDB"].ConnectionString); 
+            SQLconnection.Open();
+            
+            if (SQLconnection.State == ConnectionState.Open)
+            {
+                Console.WriteLine("Подключено");
+            }
+            Console.ReadKey();
+
             var client = new TelegramBotClient("6254402236:AAF-lAzwr4E1XjicyVw_Y6ENLNsilvAZwJM"); // создание бота с нашим токеном
             client.StartReceiving(Update, Error); // запуск бота
             Console.WriteLine("Бот запущен. Нажмите любую клавишу, чтобы остановить.");
