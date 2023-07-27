@@ -56,7 +56,7 @@ namespace casinoTelegram
             // Проверка подключения
             if (SQLconnection.State == ConnectionState.Open)
             {
-                Console.WriteLine("Подключено");
+                Console.WriteLine("База данных \"PointsDB\" подключена!");
             }
             Console.ReadKey();
 
@@ -204,7 +204,8 @@ namespace casinoTelegram
                 }
                 else
                 {
-                    await client.SendTextMessageAsync(message.Chat.Id, "Увы, вы не угадали. Попробуйте еще раз! Введите число:");
+                    await client.SendTextMessageAsync(message.Chat.Id, $"Увы, вы не угадали. Загаданное число было - {targetNumber}. Попробуйте еще раз!");
+                    targetNumber = new Random().Next(1, maxNumber + 1);
                 }
             }
             else
