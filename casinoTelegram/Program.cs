@@ -58,6 +58,10 @@ namespace casinoTelegram
             {
                 Console.WriteLine("База данных \"PointsDB\" подключена!");
             }
+
+            //SqlCommand command = new SqlCommand("INSERT INTO [Points] (UserID, Points) VALUES ('43535553', 0)", SQLconnection);
+            //Console.WriteLine(command.ExecuteNonQuery());
+            
             Console.ReadKey();
 
             var client = new TelegramBotClient("6254402236:AAF-lAzwr4E1XjicyVw_Y6ENLNsilvAZwJM"); // создание бота с нашим токеном
@@ -99,6 +103,19 @@ namespace casinoTelegram
                         await HandleMySurveyState(client, message);
                         break;
                 }
+            }
+        }
+
+        
+        private static void UpdatePointsInDB(long chatId, int points)
+        {
+            string query = $"IF EXISTS (SELECT * FROM [Points] WHERE [UserID] = '{chatId}') " +
+                           $"UPDATE [Points] SET [Points] = [Points] + {points} WHERE [UserID] = '{chatId}' " +
+                           $"ELSE INSERT INTO [Points] ([UserID], [Points]) VALUES ('{chatId}', {points})";
+
+            using (SqlCommand command = new SqlCommand(query, SQLconnection))
+            {
+                command.ExecuteNonQuery();
             }
         }
 
@@ -170,6 +187,10 @@ namespace casinoTelegram
                 if (guessedNumber == targetNumber)
                 {
                     await client.SendTextMessageAsync(message.Chat.Id, "Поздравляю! Вы угадали число! ");
+
+                    long chatId = message.Chat.Id;
+                    UpdatePointsInDB(chatId, 1); // Добавляем 1 балл пользователю
+
                     currentState = BotState.Default;
                 }
                 else if (guessedNumber < targetNumber)
@@ -200,6 +221,10 @@ namespace casinoTelegram
                 if (guessedNumber == targetNumber)
                 {
                     await client.SendTextMessageAsync(message.Chat.Id, "Поздравляю! Вы угадали число!");
+
+                    long chatId = message.Chat.Id;
+                    UpdatePointsInDB(chatId, 1); // Добавляем 1 балл пользователю
+
                     currentState = BotState.Default;
                 }
                 else
