@@ -59,9 +59,6 @@ namespace casinoTelegram
                 Console.WriteLine("База данных \"PointsDB\" подключена!");
             }
 
-            //SqlCommand command = new SqlCommand("INSERT INTO [Points] (UserID, Points) VALUES ('43535553', 0)", SQLconnection);
-            //Console.WriteLine(command.ExecuteNonQuery());
-            
             Console.ReadKey();
 
             var client = new TelegramBotClient("6254402236:AAF-lAzwr4E1XjicyVw_Y6ENLNsilvAZwJM"); // создание бота с нашим токеном
