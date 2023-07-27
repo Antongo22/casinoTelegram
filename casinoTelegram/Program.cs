@@ -21,7 +21,6 @@ namespace casinoTelegram
             ChooseRange, // выбор диапозона для игры
             Game, // процесс игры до 100
             GameUpTo10, // процесс игры до 10
-            MySurvey // процесс заполнения данных о пользователе
         }
 
         // Текущее состояние бота (по умолчанию - Default)
@@ -30,9 +29,6 @@ namespace casinoTelegram
         // Переменные для игры
         private static int targetNumber; // загаданное число
         private static int maxNumber; // максимальное число
-
-        // Словарь для хранения данных пользователей (айди пользователя и его состояния )
-        private static Dictionary<long, UserData> userDataDict = new Dictionary<long, UserData>();
 
         /// <summary>
         /// Класс для хранения данных пользователя
@@ -94,14 +90,15 @@ namespace casinoTelegram
                     case BotState.GameUpTo10:
                         await HandleGameUpTo10State(client, message);
                         break;
-                    case BotState.MySurvey:
-                        await HandleMySurveyState(client, message);
-                        break;
                 }
             }
         }
-
-        
+    
+        /// <summary>
+        /// Пополнение очков пользователя
+        /// </summary>
+        /// <param name="chatId"></param>
+        /// <param name="points"></param>
         private static void UpdatePointsInDB(long chatId, int points)
         {
             string query = $"IF EXISTS (SELECT * FROM [Points] WHERE [UserID] = '{chatId}') " +
@@ -113,6 +110,12 @@ namespace casinoTelegram
                 command.ExecuteNonQuery();
             }
         }
+
+        /// <summary>
+        /// Получение баллов пользователя
+        /// </summary>
+        /// <param name="chatId"></param>
+        /// <returns></returns>
         private static int GetPointsFromDB(long chatId)
         {
             int points = 0;
@@ -141,15 +144,11 @@ namespace casinoTelegram
             switch (message.Text)
             {
                 case "/start":
-                    await client.SendTextMessageAsync(message.Chat.Id, "Привет! Добро пожаловать в наше казино! Введите /play, чтобы начать игру, или /survey, чтобы заполнить анкету. /points для того, чтобы узнать своё количество очков.");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Привет! Добро пожаловать в наше казино! Введите /play, чтобы начать игру или /points для того, чтобы узнать своё количество очков.");
                     break;
                 case "/play":
                     await client.SendTextMessageAsync(message.Chat.Id, "Выберите диапазон чисел:\n1. От 1 до 10\n2. От 1 до 100");
                     currentState = BotState.ChooseRange;
-                    break;
-                case "/survey":
-                    await client.SendTextMessageAsync(message.Chat.Id, "Давайте заполним вашу анкету. Введите ваше имя:");
-                    currentState = BotState.MySurvey;
                     break;
                 case "/points":
                     // Обработка команды для показа баллов
@@ -158,7 +157,7 @@ namespace casinoTelegram
                     await client.SendTextMessageAsync(chatId, $"У вас {points} балл(ов).");
                     break;
                 default:
-                    await client.SendTextMessageAsync(message.Chat.Id, "Я не понимаю вашей команды. Введите /play для игры или /survey для заполнения анкеты. /points для того, чтобы узнать своё количество очков.");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Я не понимаю вашей команды. Введите /play для игры или /points для того, чтобы узнать своё количество очков.");
                     break;
             }
         }
@@ -254,51 +253,8 @@ namespace casinoTelegram
             {
                 await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число.");
             }
-        }
-
-        /// <summary>
-        /// Обработчик состояния MySurvey
-        /// </summary>
-        /// <param name="client"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        async static Task HandleMySurveyState(ITelegramBotClient client, Message message)
-        {
-            long chatId = message.Chat.Id;
-            if (!userDataDict.ContainsKey(chatId))
-            {
-                userDataDict[chatId] = new UserData();
-                userDataDict[chatId].State = 0;
-            }
-
-            switch (userDataDict[chatId].State)
-            {
-                case 0:
-                    userDataDict[chatId].FirstName = message.Text;
-                    await client.SendTextMessageAsync(message.Chat.Id, "Отлично! Теперь введите вашу фамилию:");
-                    userDataDict[chatId].State = 1;
-                    break;
-                case 1:
-                    userDataDict[chatId].LastName = message.Text;
-                    await client.SendTextMessageAsync(message.Chat.Id, "Отлично! Теперь введите ваш возраст:");
-                    userDataDict[chatId].State = 2;
-                    break;
-                case 2:
-                    if (int.TryParse(message.Text, out int age))
-                    {
-                        userDataDict[chatId].Age = age;
-                        userDataDict[chatId].LuckyNumber = new Random().Next(1, 101);
-                        await client.SendTextMessageAsync(message.Chat.Id, "Отлично! Ваши данные сохранены.");
-                        await client.SendTextMessageAsync(message.Chat.Id, $"Ваше имя: {userDataDict[chatId].FirstName}\nФамилия: {userDataDict[chatId].LastName}\nВозраст: {userDataDict[chatId].Age}\nВаше счастливое число: {userDataDict[chatId].LuckyNumber}");
-                        currentState = BotState.Default;
-                    }
-                    else
-                    {
-                        await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите ваш возраст числом.");
-                    }
-                    break;
-            }
-        }
+        }    
+        
 
         /// <summary>
         /// Метод отлова ошибок
