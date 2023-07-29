@@ -64,9 +64,6 @@ namespace casinoTelegram
             userStates[chatID].botState = botState;
         }
 
-        // Переменные для игры
-        private static int targetNumber; // загаданное число
-
         /// <summary>
         /// Задаём максимальное значение в каждому пользователю для игры
         /// </summary>
@@ -77,9 +74,34 @@ namespace casinoTelegram
             userStates[chatID].maxNumber = maxNumber;
         }
 
+        /// <summary>
+        /// Получаем максимальное значение в каждому пользователю для игры
+        /// </summary>
+        /// <param name="chatID"></param>
+        /// <returns></returns>
         private static int GetMaxNumber(long chatID)
         {
             return userStates[chatID].maxNumber;
+        }
+
+        /// <summary>
+        /// Получаем загаданное число 
+        /// </summary>
+        /// <param name="chatID"></param>
+        /// <returns></returns>
+        private static int GetTargetNumber(long chatID)
+        {
+            return userStates[chatID].targetNumber;
+        }
+
+        /// <summary>
+        /// Задаём загаданное число 
+        /// </summary>
+        /// <param name="chatID"></param>
+        /// <param name="targetNumber"></param>
+        private static void SetTardetNumber(long chatID, int maxNumber)
+        {
+            userStates[chatID].targetNumber = new Random().Next(1, maxNumber + 1);
         }
 
         private static SqlConnection SQLconnection = null; // Ссылка на БД с очками
@@ -174,13 +196,13 @@ namespace casinoTelegram
             {
                 case "1":
                     SetMaxNumber(message.Chat.Id, 10);
-                    targetNumber = new Random().Next(1, GetMaxNumber(message.Chat.Id) + 1);
+                    SetTardetNumber(message.Chat.Id, GetMaxNumber(message.Chat.Id));
                     await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали диапазон от 1 до {GetMaxNumber(message.Chat.Id)}. Давайте начнем игру! Отгадайте число от 1 до {GetMaxNumber(message.Chat.Id)}. Введите число:");
                     SetBotState(message.Chat.Id, BotState.GameUpTo10);
                     break;
                 case "2":
                     SetMaxNumber(message.Chat.Id, 100);
-                    targetNumber = new Random().Next(1, GetMaxNumber(message.Chat.Id) + 1);
+                    SetTardetNumber(message.Chat.Id, GetMaxNumber(message.Chat.Id));
                     await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали диапазон от 1 до {GetMaxNumber(message.Chat.Id)}. Давайте начнем игру! Отгадайте число от 1 до {GetMaxNumber(message.Chat.Id)}. Введите число:");           
                     SetBotState(message.Chat.Id, BotState.GameTo100);
                     break;
@@ -204,7 +226,7 @@ namespace casinoTelegram
         {
             if (int.TryParse(message.Text, out int guessedNumber))
             {
-                if (guessedNumber == targetNumber)
+                if (guessedNumber == GetTargetNumber(message.Chat.Id))
                 {
                     await client.SendTextMessageAsync(message.Chat.Id, "Поздравляю! Вы угадали число! ");
 
@@ -213,7 +235,7 @@ namespace casinoTelegram
 
                     SetBotState(message.Chat.Id, BotState.Default);                 
                 }
-                else if (guessedNumber < targetNumber)
+                else if (guessedNumber < GetTargetNumber(message.Chat.Id))
                 {
                     await client.SendTextMessageAsync(message.Chat.Id, $"Нет, загаданное число больше {guessedNumber}. Попробуйте еще раз! Введите число:");
                 }
@@ -243,7 +265,7 @@ namespace casinoTelegram
         {
             if (int.TryParse(message.Text, out int guessedNumber))
             {
-                if (guessedNumber == targetNumber)
+                if (guessedNumber == GetTargetNumber(message.Chat.Id))
                 {
                     await client.SendTextMessageAsync(message.Chat.Id, "Поздравляю! Вы угадали число!");
 
@@ -254,8 +276,8 @@ namespace casinoTelegram
                 }
                 else
                 {
-                    await client.SendTextMessageAsync(message.Chat.Id, $"Увы, вы не угадали. Загаданное число было - {targetNumber}. Попробуйте еще раз!");
-                    targetNumber = new Random().Next(1, GetMaxNumber(message.Chat.Id) + 1);
+                    await client.SendTextMessageAsync(message.Chat.Id, $"Увы, вы не угадали. Загаданное число было - {GetTargetNumber(message.Chat.Id)}. Попробуйте еще раз!");
+                    SetTardetNumber(message.Chat.Id, GetMaxNumber(message.Chat.Id));
                 }
             }
             else
