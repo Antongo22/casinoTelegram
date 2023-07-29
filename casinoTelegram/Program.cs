@@ -23,8 +23,19 @@ namespace casinoTelegram
             GameUpTo10, // процесс игры до 10
         }
   
+        private class User
+        {
+            public User(BotState botState)
+            {
+                this.botState = botState;
+            }
+            public BotState botState;
+            public int targetNumber;
+            public int maxNumber;
+        }
+
         // Хранение состояния для каждого пользователя
-        private static Dictionary<long, BotState> userStates = new Dictionary<long, BotState>();
+        private static Dictionary<long, User> userStates = new Dictionary<long, User>();
 
         /// <summary>
         /// Передача текущего состояния для каждого пользователя
@@ -35,9 +46,9 @@ namespace casinoTelegram
         {
             if(!userStates.ContainsKey(chatID))
             {
-                userStates.Add(chatID, BotState.Default);
+                userStates.Add(chatID, new User(BotState.Default));
             }
-            return userStates[chatID];
+            return userStates[chatID].botState;
         }
 
         /// <summary>
@@ -47,7 +58,7 @@ namespace casinoTelegram
         /// <param name="botState"></param>
         private static void SetBotState(long chatID, BotState botState)
         {
-            userStates[chatID] = botState;
+            userStates[chatID].botState = botState;
         }
 
         // Переменные для игры
