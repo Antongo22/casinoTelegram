@@ -30,18 +30,6 @@ namespace casinoTelegram
         private static int targetNumber; // загаданное число
         private static int maxNumber; // максимальное число
 
-        /// <summary>
-        /// Класс для хранения данных пользователя
-        /// </summary>
-        private class UserData
-        {
-            public string FirstName; // имя
-            public string LastName; // фамилия
-            public int Age; // возраст
-            public int LuckyNumber; // счастливое число
-            public int State; // Поле для отслеживания состояния анкеты
-        }
-
         private static SqlConnection SQLconnection = null; // Ссылка на БД с очками
 
         static void Main(string[] args)
