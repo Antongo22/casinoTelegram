@@ -22,10 +22,7 @@ namespace casinoTelegram
             GameTo100, // процесс игры до 100
             GameUpTo10, // процесс игры до 10
         }
-
-        // Текущее состояние бота (по умолчанию - Default)
-        private static BotState currentState = BotState.Default;
-        
+  
         // Хранение состояния для каждого пользователя
         private static Dictionary<long, BotState> userStates = new Dictionary<long, BotState>();
 
@@ -91,7 +88,7 @@ namespace casinoTelegram
 
             if (message.Text != null)
             {
-                switch (currentState)
+                switch (GetBotState(message.Chat.Id))
                 {
                     case BotState.Default:
                         await HandleDefaultState(client, message);
@@ -124,7 +121,7 @@ namespace casinoTelegram
                     break;
                 case "/play":
                     await client.SendTextMessageAsync(message.Chat.Id, "Выберите диапазон чисел:\n1. От 1 до 10\n2. От 1 до 100");
-                    currentState = BotState.ChooseRange;
+                    SetBotState(message.Chat.Id, BotState.ChooseRange);
                     break;
                 case "/points":
                     long chatId = message.Chat.Id;
@@ -151,17 +148,17 @@ namespace casinoTelegram
                     maxNumber = 10;
                     targetNumber = new Random().Next(1, maxNumber + 1);
                     await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали диапазон от 1 до {maxNumber}. Давайте начнем игру! Отгадайте число от 1 до {maxNumber}. Введите число:");
-                    currentState = BotState.GameUpTo10;
+                    SetBotState(message.Chat.Id, BotState.GameUpTo10);
                     break;
                 case "2":
                     maxNumber = 100;
                     targetNumber = new Random().Next(1, maxNumber + 1);
-                    await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали диапазон от 1 до {maxNumber}. Давайте начнем игру! Отгадайте число от 1 до {maxNumber}. Введите число:");
-                    currentState = BotState.GameTo100;
+                    await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали диапазон от 1 до {maxNumber}. Давайте начнем игру! Отгадайте число от 1 до {maxNumber}. Введите число:");           
+                    SetBotState(message.Chat.Id, BotState.GameTo100);
                     break;
                 case "/cancel":
-                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
-                    currentState = BotState.Default;
+                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена");            
+                    SetBotState(message.Chat.Id, BotState.Default);
                     break;
                 default:
                     await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, выберите 1 или 2 для выбора диапазона.");
@@ -186,7 +183,7 @@ namespace casinoTelegram
                     long chatId = message.Chat.Id;
                     UpdatePointsInDB(chatId, 1);
 
-                    currentState = BotState.Default;
+                    SetBotState(message.Chat.Id, BotState.Default);                 
                 }
                 else if (guessedNumber < targetNumber)
                 {
@@ -202,7 +199,7 @@ namespace casinoTelegram
                 if (message.Text == "/cancel")
                 {
                     await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
-                    currentState = BotState.Default;
+                    SetBotState(message.Chat.Id, BotState.Default);
                 }
                 else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число.");
             }
@@ -225,7 +222,7 @@ namespace casinoTelegram
                     long chatId = message.Chat.Id;
                     UpdatePointsInDB(chatId, 1);
 
-                    currentState = BotState.Default;
+                    SetBotState(message.Chat.Id, BotState.Default);
                 }
                 else
                 {
@@ -238,7 +235,7 @@ namespace casinoTelegram
                 if (message.Text == "/cancel")
                 {
                     await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
-                    currentState = BotState.Default;
+                    SetBotState(message.Chat.Id, BotState.Default);
                 }
                 else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число.");
             }
