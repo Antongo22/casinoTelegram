@@ -59,51 +59,36 @@ namespace casinoTelegram
         /// </summary>
         /// <param name="chatID"></param>
         /// <param name="botState"></param>
-        private static void SetBotState(long chatID, BotState botState)
-        {
-            userStates[chatID].botState = botState;
-        }
-
+        private static void SetBotState(long chatID, BotState botState) => userStates[chatID].botState = botState;
+        
         /// <summary>
         /// Задаём максимальное значение в каждому пользователю для игры
         /// </summary>
         /// <param name="chatID"></param>
         /// <param name="maxNumber"></param>
-        private static void SetMaxNumber(long chatID, int maxNumber)
-        {
-            userStates[chatID].maxNumber = maxNumber;
-        }
-
+        private static void SetMaxNumber(long chatID, int maxNumber) => userStates[chatID].maxNumber = maxNumber;
+        
         /// <summary>
         /// Получаем максимальное значение в каждому пользователю для игры
         /// </summary>
         /// <param name="chatID"></param>
         /// <returns></returns>
-        private static int GetMaxNumber(long chatID)
-        {
-            return userStates[chatID].maxNumber;
-        }
-
+        private static int GetMaxNumber(long chatID) => userStates[chatID].maxNumber;
+        
         /// <summary>
         /// Получаем загаданное число 
         /// </summary>
         /// <param name="chatID"></param>
         /// <returns></returns>
-        private static int GetTargetNumber(long chatID)
-        {
-            return userStates[chatID].targetNumber;
-        }
+        private static int GetTargetNumber(long chatID) => userStates[chatID].targetNumber; 
 
         /// <summary>
         /// Задаём загаданное число 
         /// </summary>
         /// <param name="chatID"></param>
         /// <param name="targetNumber"></param>
-        private static void SetTardetNumber(long chatID, int maxNumber)
-        {
-            userStates[chatID].targetNumber = new Random().Next(1, maxNumber + 1);
-        }
-
+        private static void SetTardetNumber(long chatID, int maxNumber) => userStates[chatID].targetNumber = new Random().Next(1, maxNumber + 1);
+        
         private static SqlConnection SQLconnection = null; // Ссылка на БД с очками
 
         static void Main(string[] args)
@@ -244,15 +229,13 @@ namespace casinoTelegram
                     await client.SendTextMessageAsync(message.Chat.Id, $"Нет, загаданное число меньше {guessedNumber}. Попробуйте еще раз! Введите число:");
                 }
             }
-            else
+            else if (message.Text == "/cancel")
             {
-                if (message.Text == "/cancel")
-                {
-                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
-                    SetBotState(message.Chat.Id, BotState.Default);
-                }
-                else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число. Ведите /cancel, чтобы отменить игру.");
+                await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                SetBotState(message.Chat.Id, BotState.Default);
             }
+            else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число. Ведите /cancel, чтобы отменить игру.");
+            
         }
 
         /// <summary>
@@ -280,15 +263,13 @@ namespace casinoTelegram
                     SetTardetNumber(message.Chat.Id, GetMaxNumber(message.Chat.Id));
                 }
             }
-            else
+            else if (message.Text == "/cancel")
             {
-                if (message.Text == "/cancel")
-                {
-                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
-                    SetBotState(message.Chat.Id, BotState.Default);
-                }
-                else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число. Ведите /cancel, чтобы отменить игру.");
+                await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                SetBotState(message.Chat.Id, BotState.Default);
             }
+            else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число. Ведите /cancel, чтобы отменить игру.");
+            
         }
 
         /// <summary>
@@ -329,7 +310,6 @@ namespace casinoTelegram
 
             return points;
         }
-
 
         /// <summary>
         /// Метод отлова ошибок
