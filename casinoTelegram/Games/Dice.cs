@@ -81,7 +81,7 @@ namespace casinoTelegram.Games
             switch (message.Text)
             {
                 case "1":
-                    await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали игру против бота. Выбирите сколько костей кидать, 1, 2 или 3.");
+                    await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали игру против бота. Выбирите сколько костей кидать, 1, 2 или 3. Количество костей соответствуют ставке.");
                     State.SetBotState(message.Chat.Id, State.BotState.DicePvE);
                     break;
                 case "2":
