@@ -11,93 +11,42 @@ using System.Data.SqlClient;
 namespace casinoTelegram
 {
     internal class Program
-    {
-        /// <summary>
-        /// Определение возможных состояний бота
-        /// </summary>
-        private enum BotState
-        {
-            Default, // стандартное значение
-            ChooseRange, // выбор диапозона для игры
-            GameTo100, // процесс игры до 100
-            GameUpTo10, // процесс игры до 10
-        }
-  
-        /// <summary>
-        /// Данные, которые хранятся у юзера
-        /// </summary>
-        private class User
-        {
-            public User(BotState botState)
-            {
-                this.botState = botState;
-            }
-            public BotState botState;
-            public int targetNumber;
-            public int maxNumber;
-        }
-
-        // Хранение состояния для каждого пользователя
-        private static Dictionary<long, User> userStates = new Dictionary<long, User>();
-
-        /// <summary>
-        /// Передача текущего состояния для каждого пользователя
-        /// </summary>
-        /// <param name="chatID"></param>
-        /// <returns></returns>
-        private static BotState GetBotState(long chatID)
-        {
-            if(!userStates.ContainsKey(chatID))
-            {
-                userStates.Add(chatID, new User(BotState.Default));
-            }
-            return userStates[chatID].botState;
-        }
-
-        /// <summary>
-        /// Получение текущего состояния для каждого пользователя
-        /// </summary>
-        /// <param name="chatID"></param>
-        /// <param name="botState"></param>
-        private static void SetBotState(long chatID, BotState botState) => userStates[chatID].botState = botState;
-        
+    {   
         /// <summary>
         /// Задаём максимальное значение в каждому пользователю для игры
         /// </summary>
         /// <param name="chatID"></param>
         /// <param name="maxNumber"></param>
-        private static void SetMaxNumber(long chatID, int maxNumber) => userStates[chatID].maxNumber = maxNumber;
+        private static void SetMaxNumber(long chatID, int maxNumber) => Data.userStates[chatID].maxNumber = maxNumber;
         
         /// <summary>
         /// Получаем максимальное значение в каждому пользователю для игры
         /// </summary>
         /// <param name="chatID"></param>
         /// <returns></returns>
-        private static int GetMaxNumber(long chatID) => userStates[chatID].maxNumber;
+        private static int GetMaxNumber(long chatID) => Data.userStates[chatID].maxNumber;
         
         /// <summary>
         /// Получаем загаданное число 
         /// </summary>
         /// <param name="chatID"></param>
         /// <returns></returns>
-        private static int GetTargetNumber(long chatID) => userStates[chatID].targetNumber; 
+        private static int GetTargetNumber(long chatID) => Data.userStates[chatID].targetNumber; 
 
         /// <summary>
         /// Задаём загаданное число 
         /// </summary>
         /// <param name="chatID"></param>
         /// <param name="targetNumber"></param>
-        private static void SetTardetNumber(long chatID, int maxNumber) => userStates[chatID].targetNumber = new Random().Next(1, maxNumber + 1);
+        private static void SetTardetNumber(long chatID, int maxNumber) => Data.userStates[chatID].targetNumber = new Random().Next(1, maxNumber + 1);
         
-        private static SqlConnection SQLconnection = null; // Ссылка на БД с очками
-
         static void Main(string[] args)
         {
-            SQLconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["PointsDB"].ConnectionString); // Подключение к базе
-            SQLconnection.Open(); // ОТкрытие для программмы базу
+            Data.SQLconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["PointsDB"].ConnectionString); // Подключение к базе
+            Data.SQLconnection.Open(); // ОТкрытие для программмы базу
             
             // Проверка подключения
-            if (SQLconnection.State == ConnectionState.Open)
+            if (Data.SQLconnection.State == ConnectionState.Open)
             {
                 Console.WriteLine("База данных \"PointsDB\" подключена!");
             }
@@ -123,18 +72,18 @@ namespace casinoTelegram
 
             if (message.Text != null)
             {
-                switch (GetBotState(message.Chat.Id))
+                switch (State.GetBotState(message.Chat.Id))
                 {
-                    case BotState.Default:
+                    case State.BotState.Default:
                         await HandleDefaultState(client, message);
                         break;
-                    case BotState.ChooseRange:
+                    case State.BotState.ChooseRange:
                         await HandleChooseRangeState(client, message);
                         break;
-                    case BotState.GameTo100:
+                    case State.BotState.GameTo100:
                         await HandleGameTo100State(client, message);
                         break;
-                    case BotState.GameUpTo10:
+                    case State.BotState.GameUpTo10:
                         await HandleGameUpTo10State(client, message);
                         break;
                 }
@@ -156,15 +105,15 @@ namespace casinoTelegram
                     break;
                 case "/help" :
                     await client.SendTextMessageAsync(message.Chat.Id, "Введите /play, чтобы начать игру или /points для того, чтобы узнать своё количество очков. Также, для отмены действия введите /cancel.");
-                    SetBotState(message.Chat.Id, BotState.ChooseRange);
+                    State.SetBotState(message.Chat.Id, State.BotState.ChooseRange);
                     break;
                 case "/play":
                     await client.SendTextMessageAsync(message.Chat.Id, "Выберите диапазон чисел:\n1. От 1 до 10\n2. От 1 до 100");
-                    SetBotState(message.Chat.Id, BotState.ChooseRange);
+                    State.SetBotState(message.Chat.Id, State.BotState.ChooseRange);
                     break;
                 case "/points":
                     long chatId = message.Chat.Id;
-                    int points = GetPointsFromDB(chatId);
+                    int points = Data.GetPointsFromDB(chatId);
                     await client.SendTextMessageAsync(chatId, $"У вас {points} балл(ов).");
                     break;
                 default:
@@ -187,17 +136,17 @@ namespace casinoTelegram
                     SetMaxNumber(message.Chat.Id, 10);
                     SetTardetNumber(message.Chat.Id, GetMaxNumber(message.Chat.Id));
                     await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали диапазон от 1 до {GetMaxNumber(message.Chat.Id)}. Давайте начнем игру! Отгадайте число от 1 до {GetMaxNumber(message.Chat.Id)}. Введите число:");
-                    SetBotState(message.Chat.Id, BotState.GameUpTo10);
+                    State.SetBotState(message.Chat.Id, State.BotState.GameUpTo10);
                     break;
                 case "2":
                     SetMaxNumber(message.Chat.Id, 100);
                     SetTardetNumber(message.Chat.Id, GetMaxNumber(message.Chat.Id));
-                    await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали диапазон от 1 до {GetMaxNumber(message.Chat.Id)}. Давайте начнем игру! Отгадайте число от 1 до {GetMaxNumber(message.Chat.Id)}. Введите число:");           
-                    SetBotState(message.Chat.Id, BotState.GameTo100);
+                    await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали диапазон от 1 до {GetMaxNumber(message.Chat.Id)}. Давайте начнем игру! Отгадайте число от 1 до {GetMaxNumber(message.Chat.Id)}. Введите число:");
+                    State.SetBotState(message.Chat.Id, State.BotState.GameTo100);
                     break;
                 case "/cancel":
-                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена");            
-                    SetBotState(message.Chat.Id, BotState.Default);
+                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                    State.SetBotState(message.Chat.Id, State.BotState.Default);
                     break;
                 default:
                     await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, выберите 1 или 2 для выбора диапазона. Ведите /cancel, чтобы отменить команду.");
@@ -220,9 +169,9 @@ namespace casinoTelegram
                     await client.SendTextMessageAsync(message.Chat.Id, "Поздравляю! Вы угадали число! ");
 
                     long chatId = message.Chat.Id;
-                    UpdatePointsInDB(chatId, 1);
+                    Data.UpdatePointsInDB(chatId, 1);
 
-                    SetBotState(message.Chat.Id, BotState.Default);                 
+                    State.SetBotState(message.Chat.Id, State.BotState.Default);                 
                 }
                 else if (guessedNumber < GetTargetNumber(message.Chat.Id))
                 {
@@ -236,7 +185,7 @@ namespace casinoTelegram
             else if (message.Text == "/cancel")
             {
                 await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
-                SetBotState(message.Chat.Id, BotState.Default);
+                State.SetBotState(message.Chat.Id, State.BotState.Default);
             }
             else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число. Ведите /cancel, чтобы отменить игру.");
             
@@ -257,9 +206,9 @@ namespace casinoTelegram
                     await client.SendTextMessageAsync(message.Chat.Id, "Поздравляю! Вы угадали число!");
 
                     long chatId = message.Chat.Id;
-                    UpdatePointsInDB(chatId, 1);
+                    Data.UpdatePointsInDB(chatId, 1);
 
-                    SetBotState(message.Chat.Id, BotState.Default);
+                    State.SetBotState(message.Chat.Id, State.BotState.Default);
                 }
                 else
                 {
@@ -270,49 +219,10 @@ namespace casinoTelegram
             else if (message.Text == "/cancel")
             {
                 await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
-                SetBotState(message.Chat.Id, BotState.Default);
+                State.SetBotState(message.Chat.Id, State.BotState.Default);
             }
             else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число. Ведите /cancel, чтобы отменить игру.");
             
-        }
-
-        /// <summary>
-        /// Пополнение очков пользователя
-        /// </summary>
-        /// <param name="chatId"></param>
-        /// <param name="points"></param>
-        private static void UpdatePointsInDB(long chatId, int points)
-        {
-            string query = $"IF EXISTS (SELECT * FROM [Points] WHERE [UserID] = '{chatId}') " +
-                           $"UPDATE [Points] SET [Points] = [Points] + {points} WHERE [UserID] = '{chatId}' " +
-                           $"ELSE INSERT INTO [Points] ([UserID], [Points]) VALUES ('{chatId}', {points})";
-
-            using (SqlCommand command = new SqlCommand(query, SQLconnection))
-            {
-                command.ExecuteNonQuery();
-            }
-        }
-
-        /// <summary>
-        /// Получение баллов пользователя
-        /// </summary>
-        /// <param name="chatId"></param>
-        /// <returns></returns>
-        private static int GetPointsFromDB(long chatId)
-        {
-            int points = 0;
-            string query = $"SELECT [Points] FROM [Points] WHERE [UserID] = '{chatId}'";
-
-            using (SqlCommand command = new SqlCommand(query, SQLconnection))
-            using (SqlDataReader reader = command.ExecuteReader())
-            {   
-                if (reader.Read())
-                {
-                    points = reader.GetInt32(0);
-                }
-            }
-
-            return points;
         }
 
         /// <summary>
