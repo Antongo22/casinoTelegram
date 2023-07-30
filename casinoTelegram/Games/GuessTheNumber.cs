@@ -84,8 +84,7 @@ namespace casinoTelegram.Games
                 {
                     await client.SendTextMessageAsync(message.Chat.Id, "Поздравляю! Вы угадали число! ");
 
-                    long chatId = message.Chat.Id;
-                    Data.UpdatePointsInDB(chatId, 1);
+                    Data.UpdatePointsInDB(message.Chat.Id, 1);
 
                     State.SetBotState(message.Chat.Id, State.BotState.Default);
                 }
@@ -121,8 +120,7 @@ namespace casinoTelegram.Games
                 {
                     await client.SendTextMessageAsync(message.Chat.Id, "Поздравляю! Вы угадали число!");
 
-                    long chatId = message.Chat.Id;
-                    Data.UpdatePointsInDB(chatId, 1);
+                    Data.UpdatePointsInDB(message.Chat.Id, 1);
 
                     State.SetBotState(message.Chat.Id, State.BotState.Default);
                 }

@@ -8,6 +8,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using casinoTelegram.Games;
+using Dice = casinoTelegram.Games.Dice;
 
 namespace casinoTelegram
 {
@@ -58,6 +59,12 @@ namespace casinoTelegram
                         break;
                     case State.BotState.GameUpTo10:
                         await GuessTheNumber.HandleGameUpTo10State(client, message);
+                        break;
+                    case State.BotState.GameDiceChoose:
+                        await Dice.HandleChooseDice(client, message);
+                        break;
+                    case State.BotState.DicePvE:
+                        await Dice.HandleDicePvE(client, message);
                         break;
                 }
             }

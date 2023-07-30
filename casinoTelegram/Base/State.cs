@@ -19,6 +19,9 @@ namespace casinoTelegram
             ChooseRange, // выбор диапозона для игры
             GameTo100, // процесс игры до 100
             GameUpTo10, // процесс игры до 10
+            GameDiceChoose, // выбор игры в кости (пве/пвп)
+            DicePvE, // игра в кости пве
+            DicePvP, // игра в кости пап
         }
 
         /// <summary>
@@ -60,13 +63,19 @@ namespace casinoTelegram
                     SetBotState(message.Chat.Id, BotState.ChooseRange);
                     break;
                 case "/play":
+                    await client.SendTextMessageAsync(message.Chat.Id, "Вот список игр - \n/number - игра в угадай число.\n/dice - игра в кости");
+                    break;
+                case "/number":
                     await client.SendTextMessageAsync(message.Chat.Id, "Выберите диапазон чисел:\n1. От 1 до 10\n2. От 1 до 100");
                     SetBotState(message.Chat.Id, BotState.ChooseRange);
                     break;
+                case "/dice":
+                    await client.SendTextMessageAsync(message.Chat.Id, "Выберите режим:\n1. PvE\n2. PvP");
+                    SetBotState(message.Chat.Id, BotState.GameDiceChoose);
+                    break;
                 case "/points":
-                    long chatId = message.Chat.Id;
-                    int points = Data.GetPointsFromDB(chatId);
-                    await client.SendTextMessageAsync(chatId, $"У вас {points} балл(ов).");
+                    int points = Data.GetPointsFromDB(message.Chat.Id);
+                    await client.SendTextMessageAsync(message.Chat.Id, $"У вас {points} балл(ов).");
                     break;
                 default:
                     await client.SendTextMessageAsync(message.Chat.Id, "Я не понимаю вашей команды. Введите /play для игры или /points для того, чтобы узнать своё количество очков. Также, для отмены действия введите /cancel. Если возникнут проблемы, можете прописать /help.");

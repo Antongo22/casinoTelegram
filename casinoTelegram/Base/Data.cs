@@ -23,6 +23,8 @@ namespace casinoTelegram
             public State.BotState botState;
             public int targetNumber;
             public int maxNumber;
+            public int diceP;
+            public int diceE;
         }
 
         // Хранение состояния для каждого пользователя
