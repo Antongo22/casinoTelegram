@@ -27,7 +27,7 @@ namespace casinoTelegram
             public int diceE; // счёт костей бота
             public long opponentID; // айли противника
             public int rate; // ставка для игры
-            public string allDice;
+            public string allDice; // полный бросок костей
         }
 
         // Хранение состояния для каждого пользователя

@@ -71,11 +71,31 @@ namespace casinoTelegram.Games
             return Data.userStates[chatID].diceE;
         }
 
+        /// <summary>
+        /// Задаём ставку игрока
+        /// </summary>
+        /// <param name="chatID"></param>
+        /// <param name="rate"></param>
         static void SetRate(long chatID, int rate)
         {
             Data.userStates[chatID].rate = rate;
         }
 
+        /// <summary>
+        /// Получаем ставку игрока
+        /// </summary>
+        /// <param name="chatID"></param>
+        /// <returns></returns>
+        static int GetRate(long chatID)
+        {
+            return Data.userStates[chatID].rate;
+        }
+
+        /// <summary>
+        /// Функция поиска противника
+        /// </summary>
+        /// <param name="chatID"></param>
+        /// <returns></returns>
         static bool FindOpponent(long chatID)
         {
             foreach (var key in Data.userStates.Keys)
@@ -96,43 +116,36 @@ namespace casinoTelegram.Games
             }
             return false;
             // Если не найден оппонент, игрок будет ожидать другого игрока с той же ставкой
-            // Состояние остается DicePvPSearch 
         }
 
+        /// <summary>
+        /// Получение костей противника
+        /// </summary>
+        /// <param name="chatID"></param>
+        /// <returns></returns>
         static int GetDiceOpponent(long chatID)
         {
             return Data.userStates[Data.userStates[chatID].opponentID].diceP;
         }
 
+        /// <summary>
+        /// Получение визуального выпадения костей противника
+        /// </summary>
+        /// <param name="chatID"></param>
+        /// <returns></returns>
         static string GetAllDiceOpponent(long chatID)
         {
             return Data.userStates[Data.userStates[chatID].opponentID].allDice;
         }
 
-        static string SetDiceOpponent(long chatID, int countOfDice)
-        {
-            string dice = "| ";
-            Random rnd = new Random();
-            Data.userStates[Data.userStates[chatID].opponentID].diceP = 0;
-
-            for (int i = 0; i < countOfDice; i++)
-            {
-                int diceP = rnd.Next(1, 7);
-                Data.userStates[Data.userStates[chatID].opponentID].diceP += diceP;
-                dice += diceP + " | ";
-            }
-
-            return dice;
-        }
-
+        /// <summary>
+        /// Получение айди противника
+        /// </summary>
+        /// <param name="chatID"></param>
+        /// <returns></returns>
         static long GetOpponentID(long chatID)
         {
             return Data.userStates[chatID].opponentID;
-        }
-
-        static int GetRate(long chatID)
-        {
-            return Data.userStates[chatID].rate;
         }
 
         /// <summary>
@@ -216,6 +229,7 @@ namespace casinoTelegram.Games
                 SetRate(message.Chat.Id, int.Parse(message.Text));
 
                 State.SetBotState(message.Chat.Id, State.BotState.DicePvPSearch);
+
                 await HandleDicePvPSearch(client, message);
             }
             else if (message.Text == "/cancel")
