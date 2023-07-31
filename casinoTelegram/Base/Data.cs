@@ -20,11 +20,14 @@ namespace casinoTelegram
             {
                 this.botState = botState;
             }
-            public State.BotState botState;
-            public int targetNumber;
-            public int maxNumber;
-            public int diceP;
-            public int diceE;
+            public State.BotState botState; // состояние 
+            public int targetNumber; // загаданное чилсло
+            public int maxNumber; // максимальное число для загадывание
+            public int diceP; // счёт костей игрока
+            public int diceE; // счёт костей бота
+            public long opponentID; // айли противника
+            public int rate; // ставка для игры
+            public string allDice;
         }
 
         // Хранение состояния для каждого пользователя

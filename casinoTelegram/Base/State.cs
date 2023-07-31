@@ -22,6 +22,7 @@ namespace casinoTelegram
             GameDiceChoose, // выбор игры в кости (пве/пвп)
             DicePvE, // игра в кости пве
             DicePvP, // игра в кости пап
+            DicePvPSearch, // ожидание противника
         }
 
         /// <summary>

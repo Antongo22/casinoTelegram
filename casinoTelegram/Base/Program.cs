@@ -66,6 +66,13 @@ namespace casinoTelegram
                     case State.BotState.DicePvE:
                         await Dice.HandleDicePvE(client, message);
                         break;
+                    case State.BotState.DicePvP:
+                        await Dice.HandleDicePvP(client, message);
+                        break;
+                    case State.BotState.DicePvPSearch:
+                        await Dice.HandleDicePvPSearch(client, message);
+                        break;
+
                 }
             }
         }
