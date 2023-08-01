@@ -56,50 +56,35 @@ namespace casinoTelegram.Games
         /// </summary>
         /// <param name="chatID"></param>
         /// <returns></returns>
-        static int GetDiceP(long chatID)
-        {
-            return Data.userStates[chatID].diceP;
-        }
-
+        static int GetDiceP(long chatID) => Data.userStates[chatID].diceP;
+        
         /// <summary>
         /// Возвращает сумму костей бота
         /// </summary>
         /// <param name="chatID"></param>
         /// <returns></returns>
-        static int GetDiceE(long chatID)
-        {
-            return Data.userStates[chatID].diceE;
-        }
-
+        static int GetDiceE(long chatID) => Data.userStates[chatID].diceE;
+        
         /// <summary>
         /// Задаём ставку игрока
         /// </summary>
         /// <param name="chatID"></param>
         /// <param name="rate"></param>
-        static void SetRate(long chatID, int rate)
-        {
-            Data.userStates[chatID].rate = rate;
-        }
-
+        static void SetRate(long chatID, int rate) => Data.userStates[chatID].rate = rate;
+       
         /// <summary>
         /// Получаем ставку игрока
         /// </summary>
         /// <param name="chatID"></param>
         /// <returns></returns>
-        static int GetRate(long chatID)
-        {
-            return Data.userStates[chatID].rate;
-        }
-
+        static int GetRate(long chatID) => Data.userStates[chatID].rate;
+        
         /// <summary>
         /// Задаём состояние поиска игры
         /// </summary>
         /// <param name="chatID"></param>
-        static void SetGemeState(long chatID)
-        {
-            Data.userStates[chatID].findGame = true;
-        }
-
+        static void SetGemeState(long chatID) => Data.userStates[chatID].findGame = true;
+        
         /// <summary>
         /// Функция поиска противника
         /// </summary>
@@ -135,31 +120,22 @@ namespace casinoTelegram.Games
         /// </summary>
         /// <param name="chatID"></param>
         /// <returns></returns>
-        static int GetDiceOpponent(long chatID)
-        {
-            return Data.userStates[Data.userStates[chatID].opponentID].diceP;
-        }
-
+        static int GetDiceOpponent(long chatID) => Data.userStates[Data.userStates[chatID].opponentID].diceP;
+        
         /// <summary>
         /// Получение визуального выпадения костей противника
         /// </summary>
         /// <param name="chatID"></param>
         /// <returns></returns>
-        static string GetAllDiceOpponent(long chatID)
-        {
-            return Data.userStates[Data.userStates[chatID].opponentID].allDice;
-        }
+        static string GetAllDiceOpponent(long chatID) => Data.userStates[Data.userStates[chatID].opponentID].allDice;     
 
         /// <summary>
         /// Получение айди противника
         /// </summary>
         /// <param name="chatID"></param>
         /// <returns></returns>
-        static long GetOpponentID(long chatID)
-        {
-            return Data.userStates[chatID].opponentID;
-        }
-
+        static long GetOpponentID(long chatID) => Data.userStates[chatID].opponentID;
+        
         /// <summary>
         /// Обработчик состояния ChooseRange
         /// </summary>
