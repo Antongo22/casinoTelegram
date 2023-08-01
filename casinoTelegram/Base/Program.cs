@@ -72,6 +72,12 @@ namespace casinoTelegram
                     case State.BotState.DicePvPSearch:
                         await Dice.HandleDicePvPSearch(client, message);
                         break;
+                    case State.BotState.CasinoRate:
+                        await Casino.HandleChooseCasinoRate(client, message);
+                        break;
+                    case State.BotState.CasinoAllRate:
+                        await Casino.HandleGameUpCasinoGame(client, message);
+                        break;
 
                 }
             }

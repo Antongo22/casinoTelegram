@@ -29,6 +29,9 @@ namespace casinoTelegram
             public int rate; // ставка для игры
             public string allDice; // полный бросок костей
             public bool findGame; // состояние поиска игры
+            public int rateCasino; // ставка для казино в денежном эквиваленте
+            public int resultCasino; // результат с казино
+            public string resultCasinoSymb; // результат казино с отображением игруку
         }
 
         // Хранение состояния для каждого пользователя

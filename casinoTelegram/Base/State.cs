@@ -23,6 +23,9 @@ namespace casinoTelegram
             DicePvE, // игра в кости пве
             DicePvP, // игра в кости пап
             DicePvPSearch, // ожидание противника
+            CasinoRate, // коэфицент ставки
+            CasinoAllRate, // ставка в денежном эквиваленте
+            CasinoPlay, // процесс игры в казино
         }
 
         /// <summary>
@@ -64,7 +67,7 @@ namespace casinoTelegram
                     SetBotState(message.Chat.Id, BotState.ChooseRange);
                     break;
                 case "/play":
-                    await client.SendTextMessageAsync(message.Chat.Id, "Вот список игр - \n/number - игра в угадай число.\n/dice - игра в кости");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Вот список игр - \n/number - игра в угадай число.\n/dice - игра в кости\n/casino - для игры в казино");
                     break;
                 case "/number":
                     await client.SendTextMessageAsync(message.Chat.Id, "Выберите диапазон чисел:\n1. От 1 до 10\n2. От 1 до 100");
@@ -73,6 +76,10 @@ namespace casinoTelegram
                 case "/dice":
                     await client.SendTextMessageAsync(message.Chat.Id, "Выберите режим:\n1. PvE\n2. PvP");
                     SetBotState(message.Chat.Id, BotState.GameDiceChoose);
+                    break;
+                case "/casino":
+                    await client.SendTextMessageAsync(message.Chat.Id, "Выберите коэффицент ставки:\n1. 1\n2. 2\n3. 3");
+                    SetBotState(message.Chat.Id, BotState.CasinoRate);
                     break;
                 case "/points":
                     int points = Data.GetPointsFromDB(message.Chat.Id);
