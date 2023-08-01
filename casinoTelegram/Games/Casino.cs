@@ -10,6 +10,11 @@ namespace casinoTelegram.Games
 {
     internal static class Casino
     {
+        /// <summary>
+        /// Подсчёт совпадений
+        /// </summary>
+        /// <param name="symbols"></param>
+        /// <returns></returns>
         static int CountIdenticalSymbols(char[] symbols)
         {
             if (symbols == null || symbols.Length == 0)
@@ -47,6 +52,10 @@ namespace casinoTelegram.Games
             return maxRepetitions;
         }
 
+        /// <summary>
+        /// Вычисления игры
+        /// </summary>
+        /// <param name="chatID"></param>
         static void SetCasino(long chatID)
         {
             char[] symbols;
@@ -113,10 +122,26 @@ namespace casinoTelegram.Games
         /// <param name="rate"></param>
         static void SetRateCasino(long chatID, int rateCasino) => Data.userStates[chatID].rateCasino = rateCasino;
 
+        /// <summary>
+        /// Получаем барабан
+        /// </summary>
+        /// <param name="chatID"></param>
+        /// <returns></returns>
         static string GetResultCasinoSymb(long chatID) => Data.userStates[chatID].resultCasinoSymb;
 
+        /// <summary>
+        /// Получаем результат
+        /// </summary>
+        /// <param name="chatID"></param>
+        /// <returns></returns>
         static int GetResultCasino(long chatID) => Data.userStates[chatID].resultCasino;
 
+        /// <summary>
+        /// Обработчик состояния HandleChooseCasinoRate
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         async public static Task HandleChooseCasinoRate(ITelegramBotClient client, Message message)
         {
             switch (message.Text)
@@ -137,7 +162,13 @@ namespace casinoTelegram.Games
                     break;
             }
         }
-      
+
+        /// <summary>
+        /// Обработчик состояния HandleGameUpCasinoGame
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         async public static Task HandleGameUpCasinoGame(ITelegramBotClient client, Message message)
         {
             if (int.TryParse(message.Text, out int rate) && rate > 0)
