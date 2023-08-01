@@ -92,6 +92,15 @@ namespace casinoTelegram.Games
         }
 
         /// <summary>
+        /// Задаём состояние поиска игры
+        /// </summary>
+        /// <param name="chatID"></param>
+        static void SetGemeState(long chatID)
+        {
+            Data.userStates[chatID].findGame = true;
+        }
+
+        /// <summary>
         /// Функция поиска противника
         /// </summary>
         /// <param name="chatID"></param>
@@ -100,7 +109,7 @@ namespace casinoTelegram.Games
         {
             foreach (var key in Data.userStates.Keys)
             {
-                if (key != chatID && Data.userStates[key].botState == State.BotState.DicePvPSearch && Data.userStates[key].rate == Data.userStates[chatID].rate)
+                if (key != chatID && Data.userStates[key].botState == State.BotState.DicePvPSearch && Data.userStates[key].rate == Data.userStates[chatID].rate && Data.userStates[key].findGame)
                 {
                     // Найден оппонент с той же ставкой и состоянием DicePvPSearch
                     // Устанавливаем состояние DicePvP для обоих игроков
@@ -110,6 +119,9 @@ namespace casinoTelegram.Games
                     // Сохраняем идентификатор оппонента для каждого игрока
                     Data.userStates[key].opponentID = chatID;
                     Data.userStates[chatID].opponentID = key;
+
+                    Data.userStates[key].findGame = false;
+                    Data.userStates[chatID].findGame = false;
 
                     return true; // Завершаем поиск оппонента
                 }
@@ -229,6 +241,8 @@ namespace casinoTelegram.Games
                 SetRate(message.Chat.Id, int.Parse(message.Text));
 
                 State.SetBotState(message.Chat.Id, State.BotState.DicePvPSearch);
+
+                SetGemeState(message.Chat.Id);
 
                 await HandleDicePvPSearch(client, message);
             }
