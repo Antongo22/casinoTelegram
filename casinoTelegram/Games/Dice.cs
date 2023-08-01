@@ -83,7 +83,7 @@ namespace casinoTelegram.Games
         /// Задаём состояние поиска игры
         /// </summary>
         /// <param name="chatID"></param>
-        static void SetGemeState(long chatID) => Data.userStates[chatID].findGame = true;
+        static void SetGemeState(long chatID, bool state) => Data.userStates[chatID].findGame = state;
         
         /// <summary>
         /// Функция поиска противника
@@ -218,7 +218,7 @@ namespace casinoTelegram.Games
 
                 State.SetBotState(message.Chat.Id, State.BotState.DicePvPSearch);
 
-                SetGemeState(message.Chat.Id);
+                SetGemeState(message.Chat.Id, true);
 
                 await HandleDicePvPSearch(client, message);
             }
@@ -283,6 +283,7 @@ namespace casinoTelegram.Games
             {
                 await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
                 State.SetBotState(message.Chat.Id, State.BotState.Default);
+                SetGemeState(message.Chat.Id, false);
             }
             else
             {
