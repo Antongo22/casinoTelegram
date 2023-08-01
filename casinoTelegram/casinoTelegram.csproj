@@ -77,6 +77,7 @@
   <ItemGroup>
     <Compile Include="Base\Data.cs" />
     <Compile Include="Base\Program.cs" />
+    <Compile Include="Games\Casino.cs" />
     <Compile Include="Games\Dice.cs" />
     <Compile Include="Games\GuessTheNumber.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
