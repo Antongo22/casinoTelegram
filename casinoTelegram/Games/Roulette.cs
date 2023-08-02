@@ -28,7 +28,7 @@ namespace casinoTelegram.Games
         static string GameNumber(long chatID)
         {
             Random rnd = new Random();
-            Data.userStates[chatID].resultCasino = rnd.Next(0, 1);
+            Data.userStates[chatID].resultCasino = rnd.Next(0, 37);
 
             if (Data.userStates[chatID].resultCasino == Data.userStates[chatID].rate)
             {
