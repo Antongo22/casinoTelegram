@@ -28,7 +28,7 @@ namespace casinoTelegram
             RouletteRate, // вносим ставку
             RouletteChoose, // выбор на что ставить номер или цвет
             RouletteChooseNumber, // рулетка пря выборе номера
-            RouletteChooseColor, // рулетка пря выборе цвета
+            RouletteChooseParity, // рулетка пря выборе чётности
 
         }
 
@@ -75,7 +75,7 @@ namespace casinoTelegram
                     break;
                 case "/play":
                     await client.SendTextMessageAsync(message.Chat.Id, "Вот список игр - \n/number - игра в угадай число.\n" +
-                        "/dice - игра в кости\n/casino - для игры в казино");
+                        "/dice - игра в кости\n/casino - для игры в казино\n/roulette - для игры в рулетку");
                     break;
                 case "/number":
                     await client.SendTextMessageAsync(message.Chat.Id, "Выберите диапазон чисел:\n1. От 1 до 10\n2. От 1 до 100");
