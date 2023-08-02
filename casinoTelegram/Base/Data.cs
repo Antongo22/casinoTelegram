@@ -32,6 +32,7 @@ namespace casinoTelegram
             public int rateCasino; // ставка для казино в денежном эквиваленте
             public int resultCasino; // результат с казино
             public string resultCasinoSymb; // результат казино с отображением игруку
+            public string rouletteColor; // цвет ставки
         }
 
         // Хранение состояния для каждого пользователя

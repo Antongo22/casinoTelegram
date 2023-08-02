@@ -80,6 +80,7 @@
     <Compile Include="Games\Casino.cs" />
     <Compile Include="Games\Dice.cs" />
     <Compile Include="Games\GuessTheNumber.cs" />
+    <Compile Include="Games\Roulette.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Base\State.cs" />
   </ItemGroup>

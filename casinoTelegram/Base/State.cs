@@ -25,7 +25,11 @@ namespace casinoTelegram
             DicePvPSearch, // ожидание противника
             CasinoRate, // коэфицент ставки
             CasinoAllRate, // ставка в денежном эквиваленте
-            CasinoPlay, // процесс игры в казино
+            RouletteRate, // вносим ставку
+            RouletteChoose, // выбор на что ставить номер или цвет
+            RouletteChooseNumber, // рулетка пря выборе номера
+            RouletteChooseColor, // рулетка пря выборе цвета
+
         }
 
         /// <summary>
