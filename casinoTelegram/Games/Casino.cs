@@ -150,7 +150,8 @@ namespace casinoTelegram.Games
                 case "2":
                 case "3":
                     SetRate(message.Chat.Id, int.Parse(message.Text));
-                    await client.SendTextMessageAsync(message.Chat.Id, $"Ваш коэффицент - {Data.userStates[message.Chat.Id].rate}. Теперь, введите какое количество очков вы поставите.");          
+                    await client.SendTextMessageAsync(message.Chat.Id, $"Ваш коэффицент - {Data.userStates[message.Chat.Id].rate}. " +
+                        $"Теперь, введите какое количество очков вы поставите.");          
                     State.SetBotState(message.Chat.Id, State.BotState.CasinoAllRate);                           
                     break;
                 case "/cancel":
@@ -158,7 +159,8 @@ namespace casinoTelegram.Games
                     State.SetBotState(message.Chat.Id, State.BotState.Default);
                     break;
                 default:
-                    await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, выберите 1, 2 или 3 для выбора коэффицента ставки. Ведите /cancel, чтобы отменить команду.");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, выберите 1, 2 или 3 для выбора коэффицента ставки. " +
+                        "Ведите /cancel, чтобы отменить команду.");
                     break;
             }
         }

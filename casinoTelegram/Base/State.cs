@@ -64,14 +64,18 @@ namespace casinoTelegram
             switch (message.Text)
             {
                 case "/start":
-                    await client.SendTextMessageAsync(message.Chat.Id, "Привет! Добро пожаловать в наше казино! Введите /play, чтобы начать игру или /points для того, чтобы узнать своё количество очков. Также, для отмены действия введите /cancel. Если возникнут проблемы, можете прописать /help");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Привет! Добро пожаловать в наше казино! " +
+                        "Введите /play, чтобы начать игру или /points для того, чтобы узнать своё количество очков. " +
+                        "Также, для отмены действия введите /cancel. Если возникнут проблемы, можете прописать /help");
                     break;
                 case "/help":
-                    await client.SendTextMessageAsync(message.Chat.Id, "Введите /play, чтобы начать игру или /points для того, чтобы узнать своё количество очков. Также, для отмены действия введите /cancel.");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Введите /play, чтобы начать игру или /points для того, " +
+                        "чтобы узнать своё количество очков. Также, для отмены действия введите /cancel.");
                     SetBotState(message.Chat.Id, BotState.ChooseRange);
                     break;
                 case "/play":
-                    await client.SendTextMessageAsync(message.Chat.Id, "Вот список игр - \n/number - игра в угадай число.\n/dice - игра в кости\n/casino - для игры в казино");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Вот список игр - \n/number - игра в угадай число.\n" +
+                        "/dice - игра в кости\n/casino - для игры в казино");
                     break;
                 case "/number":
                     await client.SendTextMessageAsync(message.Chat.Id, "Выберите диапазон чисел:\n1. От 1 до 10\n2. От 1 до 100");
@@ -94,7 +98,9 @@ namespace casinoTelegram
                     await client.SendTextMessageAsync(message.Chat.Id, $"У вас {points} балл(ов).");
                     break;
                 default:
-                    await client.SendTextMessageAsync(message.Chat.Id, "Я не понимаю вашей команды. Введите /play для игры или /points для того, чтобы узнать своё количество очков. Также, для отмены действия введите /cancel. Если возникнут проблемы, можете прописать /help.");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Я не понимаю вашей команды. Введите /play для игры или /points для того, " +
+                        "чтобы узнать своё количество очков. Также, для отмены действия введите /cancel. Если возникнут проблемы, " +
+                        "можете прописать /help.");
                     break;
             }
         }

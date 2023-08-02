@@ -147,11 +147,13 @@ namespace casinoTelegram.Games
             switch (message.Text)
             {
                 case "1":
-                    await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали игру против бота. Выбирите сколько костей кидать, 1, 2 или 3. Количество костей соответствуют ставке.");
+                    await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали игру против бота. " +
+                        $"Выбирите сколько костей кидать, 1, 2 или 3. Количество костей соответствуют ставке.");
                     State.SetBotState(message.Chat.Id, State.BotState.DicePvE);
                     break;
                 case "2":
-                    await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали игру против игрока. Выбирите сколько костей кидать, 1, 2 или 3. Количество костей соответствуют ставке.");
+                    await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали игру против игрока. " +
+                        $"Выбирите сколько костей кидать, 1, 2 или 3. Количество костей соответствуют ставке.");
                     State.SetBotState(message.Chat.Id, State.BotState.DicePvP);
                     break;
                 case "/cancel":
@@ -159,7 +161,8 @@ namespace casinoTelegram.Games
                     State.SetBotState(message.Chat.Id, State.BotState.Default);
                     break;
                 default:
-                    await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, выберите 1 или 2 для выбора режима. Ведите /cancel, чтобы отменить команду.");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, выберите 1 или 2 для выбора режима. " +
+                        "Ведите /cancel, чтобы отменить команду.");
                     break;
             }
         }
@@ -200,7 +203,8 @@ namespace casinoTelegram.Games
                 await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
                 State.SetBotState(message.Chat.Id, State.BotState.Default);
             }
-            else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число от 1 до 3. Ведите /cancel, чтобы отменить игру.");
+            else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число от 1 до 3. " +
+                "Ведите /cancel, чтобы отменить игру.");
         }
 
         /// <summary>
@@ -227,7 +231,8 @@ namespace casinoTelegram.Games
                 await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
                 State.SetBotState(message.Chat.Id, State.BotState.Default);
             }
-            else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число от 1 до 3. Ведите /cancel, чтобы отменить игру.");
+            else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число от 1 до 3. " +
+                "Ведите /cancel, чтобы отменить игру.");
         }
 
         /// <summary>
@@ -244,13 +249,17 @@ namespace casinoTelegram.Games
                 await client.SendTextMessageAsync(GetOpponentID(message.Chat.Id), $"Противник найден!");
 
                 await client.SendTextMessageAsync(message.Chat.Id, $"Вам выпало - {SetDiceP(message.Chat.Id, GetRate(message.Chat.Id))}");
-                await client.SendTextMessageAsync(GetOpponentID(message.Chat.Id), $"Вам выпало - {SetDiceP(GetOpponentID(message.Chat.Id), GetRate(message.Chat.Id))}");
+                await client.SendTextMessageAsync(GetOpponentID(message.Chat.Id), $"Вам выпало " +
+                    $"- {SetDiceP(GetOpponentID(message.Chat.Id), GetRate(message.Chat.Id))}");
 
                 await client.SendTextMessageAsync(message.Chat.Id, $"Противнику выпало - {GetAllDiceOpponent(message.Chat.Id)}");
-                await client.SendTextMessageAsync(GetOpponentID(message.Chat.Id), $"Противнику выпало - {GetAllDiceOpponent(GetOpponentID(message.Chat.Id))}");
+                await client.SendTextMessageAsync(GetOpponentID(message.Chat.Id), $"Противнику выпало " +
+                    $"- {GetAllDiceOpponent(GetOpponentID(message.Chat.Id))}");
 
-                await client.SendTextMessageAsync(message.Chat.Id, $"Вы - {GetDiceP(message.Chat.Id)}\nПротивник - {GetDiceOpponent(message.Chat.Id)}");
-                await client.SendTextMessageAsync(GetOpponentID(message.Chat.Id), $"Вы - {GetDiceP(GetOpponentID(message.Chat.Id))}\nПротивник - {GetDiceOpponent(GetOpponentID(message.Chat.Id))}");
+                await client.SendTextMessageAsync(message.Chat.Id, $"Вы - {GetDiceP(message.Chat.Id)}\nП" +
+                    $"ротивник - {GetDiceOpponent(message.Chat.Id)}");
+                await client.SendTextMessageAsync(GetOpponentID(message.Chat.Id), $"Вы " +
+                    $"- {GetDiceP(GetOpponentID(message.Chat.Id))}\nПротивник - {GetDiceOpponent(GetOpponentID(message.Chat.Id))}");
 
 
                 if (GetDiceP(message.Chat.Id) > GetDiceOpponent(message.Chat.Id))

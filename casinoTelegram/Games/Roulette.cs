@@ -24,7 +24,8 @@ namespace casinoTelegram.Games
             {
                 SetRateCasino(message.Chat.Id, rate);
                 await client.SendTextMessageAsync(message.Chat.Id, $"Ваша ставка {Data.userStates[message.Chat.Id].rateCasino} принята.");
-                await client.SendTextMessageAsync(message.Chat.Id, $"Выберите на что ставить:\n1. Конкретный номер (выгрыш в 37 больше ставки)\n2. Чётное или нечётное (выигрыш в два раза больше ставки)");
+                await client.SendTextMessageAsync(message.Chat.Id, $"Выберите на что ставить:\n1. Конкретный номер (выгрыш в 37 больше ставки)\n2. " +
+                    $"Чётное или нечётное (выигрыш в два раза больше ставки)");
                 
                 State.SetBotState(message.Chat.Id, State.BotState.RouletteChoose);
             }
@@ -42,7 +43,9 @@ namespace casinoTelegram.Games
             switch (message.Text)
             {
                 case "1":
-                    
+                    await client.SendTextMessageAsync(message.Chat.Id, $"Введите номер, на который вы ставите.");
+
+
                     break;
                 case "2":
                     

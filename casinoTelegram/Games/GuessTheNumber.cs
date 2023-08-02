@@ -51,13 +51,17 @@ namespace casinoTelegram.Games
                 case "1":
                     SetMaxNumber(message.Chat.Id, 10);
                     SetTardetNumber(message.Chat.Id, GetMaxNumber(message.Chat.Id));
-                    await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали диапазон от 1 до {GetMaxNumber(message.Chat.Id)}. Давайте начнем игру! Отгадайте число от 1 до {GetMaxNumber(message.Chat.Id)}. Введите число:");
+                    await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали диапазон от 1 до {GetMaxNumber(message.Chat.Id)}. " +
+                        $"Давайте начнем игру! Отгадайте число от 1 до {GetMaxNumber(message.Chat.Id)}. Введите число:");
+
                     State.SetBotState(message.Chat.Id, State.BotState.GameUpTo10);
                     break;
                 case "2":
                     SetMaxNumber(message.Chat.Id, 100);
                     SetTardetNumber(message.Chat.Id, GetMaxNumber(message.Chat.Id));
-                    await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали диапазон от 1 до {GetMaxNumber(message.Chat.Id)}. Давайте начнем игру! Отгадайте число от 1 до {GetMaxNumber(message.Chat.Id)}. Введите число:");
+                    await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали диапазон от 1 до {GetMaxNumber(message.Chat.Id)}. " +
+                        $"Давайте начнем игру! Отгадайте число от 1 до {GetMaxNumber(message.Chat.Id)}. Введите число:");
+
                     State.SetBotState(message.Chat.Id, State.BotState.GameTo100);
                     break;
                 case "/cancel":
@@ -65,7 +69,8 @@ namespace casinoTelegram.Games
                     State.SetBotState(message.Chat.Id, State.BotState.Default);
                     break;
                 default:
-                    await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, выберите 1 или 2 для выбора диапазона. Ведите /cancel, чтобы отменить команду.");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, выберите 1 или 2 для выбора диапазона. " +
+                        "Ведите /cancel, чтобы отменить команду.");
                     break;
             }
         }
@@ -90,11 +95,13 @@ namespace casinoTelegram.Games
                 }
                 else if (guessedNumber < GetTargetNumber(message.Chat.Id))
                 {
-                    await client.SendTextMessageAsync(message.Chat.Id, $"Нет, загаданное число больше {guessedNumber}. Попробуйте еще раз! Введите число:");
+                    await client.SendTextMessageAsync(message.Chat.Id, $"Нет, загаданное число больше {guessedNumber}. " +
+                        $"Попробуйте еще раз! Введите число:");
                 }
                 else
                 {
-                    await client.SendTextMessageAsync(message.Chat.Id, $"Нет, загаданное число меньше {guessedNumber}. Попробуйте еще раз! Введите число:");
+                    await client.SendTextMessageAsync(message.Chat.Id, $"Нет, загаданное число меньше {guessedNumber}. " +
+                        $"Попробуйте еще раз! Введите число:");
                 }
             }
             else if (message.Text == "/cancel")
@@ -126,7 +133,8 @@ namespace casinoTelegram.Games
                 }
                 else
                 {
-                    await client.SendTextMessageAsync(message.Chat.Id, $"Увы, вы не угадали. Загаданное число было - {GetTargetNumber(message.Chat.Id)}. Попробуйте еще раз!");
+                    await client.SendTextMessageAsync(message.Chat.Id, $"Увы, вы не угадали. " +
+                        $"Загаданное число было - {GetTargetNumber(message.Chat.Id)}. Попробуйте еще раз!");
                     SetTardetNumber(message.Chat.Id, GetMaxNumber(message.Chat.Id));
                 }
             }
