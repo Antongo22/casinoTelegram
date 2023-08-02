@@ -85,6 +85,10 @@ namespace casinoTelegram
                     await client.SendTextMessageAsync(message.Chat.Id, "Выберите коэффицент ставки:\n1. 1\n2. 2\n3. 3");
                     SetBotState(message.Chat.Id, BotState.CasinoRate);
                     break;
+                case "/roulette":
+                    await client.SendTextMessageAsync(message.Chat.Id, "Внесите вашу ставку");
+                    SetBotState(message.Chat.Id, BotState.RouletteRate);
+                    break;
                 case "/points":
                     int points = Data.GetPointsFromDB(message.Chat.Id);
                     await client.SendTextMessageAsync(message.Chat.Id, $"У вас {points} балл(ов).");
