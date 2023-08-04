@@ -16,13 +16,6 @@ namespace casinoTelegram
         /// </summary>
         public class User
         {
-            // состояние для рулетки
-            public enum Roulett
-            {
-                Number, // игра с угадыванием конкретного сисла
-                Parity, // игра с угадыванием чётности или нечётности числа
-            }
-
             public User(State.BotState botState)
             {
                 this.botState = botState;
@@ -40,7 +33,6 @@ namespace casinoTelegram
             public int resultCasino; // результат с казино
             public string resultCasinoSymb; // результат казино с отображением игруку
             public string rouletteParity; // чётность ставки
-            public Roulett roulettState; // состояние игры
         }
 
         // Хранение состояния для каждого пользователя

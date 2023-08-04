@@ -44,6 +44,41 @@ namespace casinoTelegram.Games
             }
         }
 
+        static void SetParity(long chatID, string rate) => Data.userStates[chatID].rouletteParity = rate;     
+
+        static string GameParity(long chatID)
+        {
+            Random rnd = new Random();
+            Data.userStates[chatID].resultCasino = rnd.Next(0, 37);
+
+            string text = $"Выпало число {Data.userStates[chatID].resultCasino}\n";
+
+            string result;
+
+            if (Data.userStates[chatID].resultCasino % 2 == 0)
+            {
+                result = "1";
+            }
+            else
+            {
+                result = "2";
+            }
+
+            if (result == Data.userStates[chatID].rouletteParity)
+            {
+                text += "Вы выиграли!";
+                Data.UpdatePointsInDB(chatID, Data.userStates[chatID].rateCasino);
+            }
+            else
+            {
+                text += "Вы проиграли!";
+                Data.UpdatePointsInDB(chatID, Data.userStates[chatID].rateCasino * -1);
+            }
+
+            return text ;
+        }
+
+
         async public static Task HandleGameUpRouletteRate(ITelegramBotClient client, Message message)
         {
             if (int.TryParse(message.Text, out int rate) && rate > 0)
@@ -71,12 +106,10 @@ namespace casinoTelegram.Games
                 case "1":
                     await client.SendTextMessageAsync(message.Chat.Id, $"Введите номер, на который вы ставите (от 0 до 36).");
                     State.SetBotState(message.Chat.Id, State.BotState.RouletteChooseNumber);
-
                     break;
                 case "2":
                     await client.SendTextMessageAsync(message.Chat.Id, $"Чтобы поставить на чёт/нечёт, введите \n1. Чётноеn\n2. Нечётное");
                     State.SetBotState(message.Chat.Id, State.BotState.RouletteChooseParity);
-
                     break;
                 case "/cancel":
                     await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
@@ -106,6 +139,29 @@ namespace casinoTelegram.Games
             }
             else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только целое число от 0 до 36. " +
                 "Ведите /cancel, чтобы отменить игру.");
+        }
+
+        async public static Task HandleGameUpRouletteParity(ITelegramBotClient client, Message message)
+        {
+            switch (message.Text)
+            {
+                case "1":
+                case "2":
+
+                    SetParity(message.Chat.Id, message.Text);
+
+                    await client.SendTextMessageAsync(message.Chat.Id, $"{GameParity(message.Chat.Id)}");
+                    State.SetBotState(message.Chat.Id, State.BotState.Default);
+                    break;
+                case "/cancel":
+                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                    State.SetBotState(message.Chat.Id, State.BotState.Default);
+                    break;
+                default:
+                    await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, выберите 1 или 2 для ставки." +
+                        "Ведите /cancel, чтобы отменить команду.");
+                    break;
+            }
 
         }
     }

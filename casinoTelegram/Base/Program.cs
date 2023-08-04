@@ -87,6 +87,9 @@ namespace casinoTelegram
                     case State.BotState.RouletteChooseNumber:
                         await Roulette.HandleGameUpRouletteNumber(client, message);
                         break;
+                    case State.BotState.RouletteChooseParity:
+                        await Roulette.HandleGameUpRouletteParity(client, message);
+                        break;
 
                 }
             }
