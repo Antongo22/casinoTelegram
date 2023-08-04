@@ -25,6 +25,11 @@ namespace casinoTelegram.Games
         /// <param name="rate"></param>
         static void SetRate(long chatID, int rate) => Data.userStates[chatID].rate = rate;
 
+        /// <summary>
+        /// Рулетка с угадыванием конкретного номера
+        /// </summary>
+        /// <param name="chatID"></param>
+        /// <returns></returns>
         static string GameNumber(long chatID)
         {
             Random rnd = new Random();
@@ -44,8 +49,18 @@ namespace casinoTelegram.Games
             }
         }
 
+        /// <summary>
+        /// Заносим ставку на чётность
+        /// </summary>
+        /// <param name="chatID"></param>
+        /// <param name="rate"></param>
         static void SetParity(long chatID, string rate) => Data.userStates[chatID].rouletteParity = rate;     
 
+        /// <summary>
+        /// Процесс игры в чётность
+        /// </summary>
+        /// <param name="chatID"></param>
+        /// <returns></returns>
         static string GameParity(long chatID)
         {
             Random rnd = new Random();
@@ -78,7 +93,12 @@ namespace casinoTelegram.Games
             return text ;
         }
 
-
+        /// <summary>
+        /// Вноос ставки
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         async public static Task HandleGameUpRouletteRate(ITelegramBotClient client, Message message)
         {
             if (int.TryParse(message.Text, out int rate) && rate > 0)
@@ -99,6 +119,12 @@ namespace casinoTelegram.Games
                 "Ведите /cancel, чтобы отменить игру.");
         }
 
+        /// <summary>
+        /// Выбор режима рулетки
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         async public static Task HandleChooseRangeState(ITelegramBotClient client, Message message)
         {
             switch (message.Text)
@@ -122,6 +148,12 @@ namespace casinoTelegram.Games
             }
         }
 
+        /// <summary>
+        /// Обработчик игры с угадыванием числа
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         async public static Task HandleGameUpRouletteNumber(ITelegramBotClient client, Message message)
         {
             if (int.TryParse(message.Text, out int rate) && rate >= 0 && rate < 37)
@@ -141,6 +173,12 @@ namespace casinoTelegram.Games
                 "Ведите /cancel, чтобы отменить игру.");
         }
 
+        /// <summary>
+        /// Обработчик игры с угадыванием чётности
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         async public static Task HandleGameUpRouletteParity(ITelegramBotClient client, Message message)
         {
             switch (message.Text)

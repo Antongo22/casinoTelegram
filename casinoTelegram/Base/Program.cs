@@ -17,7 +17,7 @@ namespace casinoTelegram
         static void Main(string[] args)
         {
             Data.SQLconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["PointsDB"].ConnectionString); // Подключение к базе
-            Data.SQLconnection.Open(); // ОТкрытие для программмы базу
+            Data.SQLconnection.Open(); // Открытие для программмы базу
             
             // Проверка подключения
             if (Data.SQLconnection.State == ConnectionState.Open)
