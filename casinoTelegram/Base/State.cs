@@ -29,7 +29,6 @@ namespace casinoTelegram
             RouletteChoose, // выбор на что ставить номер или цвет
             RouletteChooseNumber, // рулетка пря выборе номера
             RouletteChooseParity, // рулетка пря выборе чётности
-
         }
 
         /// <summary>
