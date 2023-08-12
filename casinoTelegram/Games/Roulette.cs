@@ -101,7 +101,7 @@ namespace casinoTelegram.Games
         /// <returns></returns>
         async public static Task HandleGameUpRouletteRate(ITelegramBotClient client, Message message)
         {
-            if (int.TryParse(message.Text, out int rate) && rate > 0)
+            if (int.TryParse(message.Text, out int rate) && rate > 0 && Data.GetPointsFromDB(message.Chat.Id) >= rate)
             {
                 SetRateCasino(message.Chat.Id, rate);
                 await client.SendTextMessageAsync(message.Chat.Id, $"Ваша ставка {Data.userStates[message.Chat.Id].rateCasino} принята.");
@@ -109,6 +109,10 @@ namespace casinoTelegram.Games
                     $"Чётное или нечётное (выигрыш в два раза больше ставки)");
                 
                 State.SetBotState(message.Chat.Id, State.BotState.RouletteChoose);
+            }
+            else if (Data.GetPointsFromDB(message.Chat.Id) < rate)
+            {
+                await client.SendTextMessageAsync(message.Chat.Id, "Вы не можете поставить больше, чем у вас есть!");
             }
             else if (message.Text == "/cancel")
             {

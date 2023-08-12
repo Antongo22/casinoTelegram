@@ -176,7 +176,12 @@ namespace casinoTelegram.Games
         async public static Task HandleDicePvE(ITelegramBotClient client, Message message)
         {
             if (message.Text == "1" ||  message.Text == "2" || message.Text == "3")
-            {
+            {      
+                if (int.Parse(message.Text) > Data.GetPointsFromDB(message.Chat.Id))
+                {
+                    await client.SendTextMessageAsync(message.Chat.Id, "Вы не можете поставить больше, чем у вас есть!");
+                    return;
+                }
                 await client.SendTextMessageAsync(message.Chat.Id, $"Вам выпало - {SetDiceP(message.Chat.Id, int.Parse(message.Text))}");
                 await client.SendTextMessageAsync(message.Chat.Id, $"Боту выпало выпало - {SetDiceE(message.Chat.Id, int.Parse(message.Text))}");
                 await client.SendTextMessageAsync(message.Chat.Id, $"Вы - {GetDiceP(message.Chat.Id)}\nБот - {GetDiceE(message.Chat.Id)}");
@@ -217,6 +222,11 @@ namespace casinoTelegram.Games
         {
             if (message.Text == "1" || message.Text == "2" || message.Text == "3")
             {
+                if (int.Parse(message.Text) > Data.GetPointsFromDB(message.Chat.Id))
+                {
+                    await client.SendTextMessageAsync(message.Chat.Id, "Вы не можете поставить больше, чем у вас есть!");
+                    return;
+                }
                 await client.SendTextMessageAsync(message.Chat.Id, $"Ожидание игрока, как только он найдётся, игра произойдёт автоматически.");
                 SetRate(message.Chat.Id, int.Parse(message.Text));
 
