@@ -106,17 +106,17 @@ namespace casinoTelegram.Games
                 SetRateCasino(message.Chat.Id, rate);
                 await client.SendTextMessageAsync(message.Chat.Id, $"Ваша ставка {Data.userStates[message.Chat.Id].rateCasino} принята.");
                 await client.SendTextMessageAsync(message.Chat.Id, $"Выберите на что ставить:\n1. Конкретный номер (выгрыш в 37 больше ставки)\n2. " +
-                    $"Чётное или нечётное (выигрыш в два раза больше ставки)");
+                    $"Чётное или нечётное (выигрыш в два раза больше ставки)", replyMarkup: Data.replyKeyboardMarkupCancel);
                 
                 State.SetBotState(message.Chat.Id, State.BotState.RouletteChoose);
             }
             else if (Data.GetPointsFromDB(message.Chat.Id) < rate)
             {
-                await client.SendTextMessageAsync(message.Chat.Id, "Вы не можете поставить больше, чем у вас есть!");
+                await client.SendTextMessageAsync(message.Chat.Id, "Вы не можете поставить больше, чем у вас есть!", replyMarkup: Data.replyKeyboardMarkupCancel);
             }
             else if (message.Text == "/cancel")
             {
-                await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                await client.SendTextMessageAsync(message.Chat.Id, "Отмена", replyMarkup: Data.replyKeyboardMarkupDefault);
                 State.SetBotState(message.Chat.Id, State.BotState.Default);
             }
             else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только положительное, целое число. " +
@@ -134,15 +134,15 @@ namespace casinoTelegram.Games
             switch (message.Text)
             {
                 case "1":
-                    await client.SendTextMessageAsync(message.Chat.Id, $"Введите номер, на который вы ставите (от 0 до 36).");
+                    await client.SendTextMessageAsync(message.Chat.Id, $"Введите номер, на который вы ставите (от 0 до 36)." , replyMarkup: Data.replyKeyboardMarkupCancel);
                     State.SetBotState(message.Chat.Id, State.BotState.RouletteChooseNumber);
                     break;
                 case "2":
-                    await client.SendTextMessageAsync(message.Chat.Id, $"Чтобы поставить на чёт/нечёт, введите \n1. Чётноеn\n2. Нечётное");
+                    await client.SendTextMessageAsync(message.Chat.Id, $"Чтобы поставить на чёт/нечёт, введите \n1. Чётноеn\n2. Нечётное", replyMarkup: Data.replyKeyboardMarkupChoose12);
                     State.SetBotState(message.Chat.Id, State.BotState.RouletteChooseParity);
                     break;
                 case "/cancel":
-                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена", replyMarkup: Data.replyKeyboardMarkupDefault);
                     State.SetBotState(message.Chat.Id, State.BotState.Default);
                     break;
                 default:
@@ -170,7 +170,7 @@ namespace casinoTelegram.Games
             }
             else if (message.Text == "/cancel")
             {
-                await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                await client.SendTextMessageAsync(message.Chat.Id, "Отмена", replyMarkup: Data.replyKeyboardMarkupDefault);
                 State.SetBotState(message.Chat.Id, State.BotState.Default);
             }
             else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только целое число от 0 до 36. " +
@@ -189,14 +189,13 @@ namespace casinoTelegram.Games
             {
                 case "1":
                 case "2":
-
                     SetParity(message.Chat.Id, message.Text);
 
-                    await client.SendTextMessageAsync(message.Chat.Id, $"{GameParity(message.Chat.Id)}");
+                    await client.SendTextMessageAsync(message.Chat.Id, $"{GameParity(message.Chat.Id)}", replyMarkup: Data.replyKeyboardMarkupDefault);
                     State.SetBotState(message.Chat.Id, State.BotState.Default);
                     break;
                 case "/cancel":
-                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена", replyMarkup: Data.replyKeyboardMarkupDefault);
                     State.SetBotState(message.Chat.Id, State.BotState.Default);
                     break;
                 default:

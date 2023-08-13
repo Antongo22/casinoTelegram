@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace casinoTelegram
 {
@@ -39,6 +40,55 @@ namespace casinoTelegram
         public static Dictionary<long, User> userStates = new Dictionary<long, User>();
 
         public static SqlConnection SQLconnection = null; // Ссылка на БД с очками
+
+        // Клавиатура для ответов
+        public static ReplyKeyboardMarkup replyKeyboardMarkupDefault = new(new[]
+        {
+                new KeyboardButton[] { "/points", "/help", "/play" },
+        })
+        {
+            ResizeKeyboard = true
+        };
+
+        // Клавиатура для ответов
+        public static ReplyKeyboardMarkup replyKeyboardMarkupPlay = new(new[]
+        {
+                new KeyboardButton[] { "/number", "/dice", "/casino",},
+                new KeyboardButton[] { "/roulette", "/points", "/cancel" },
+        })
+        {
+            ResizeKeyboard = true
+        };
+
+        // Клавиатура для ответов
+        public static ReplyKeyboardMarkup replyKeyboardMarkupChoose12 = new(new[]
+        {
+                new KeyboardButton[] { "1", "2" },
+                new KeyboardButton[] { "/cancel" },
+        })
+        {
+            ResizeKeyboard = true
+        };
+
+        // Клавиатура для ответов
+        public static ReplyKeyboardMarkup replyKeyboardMarkupChoose123 = new(new[]
+        {
+                new KeyboardButton[] { "1", "2", "3" },
+                new KeyboardButton[] { "/cancel" },
+        })
+        {
+            ResizeKeyboard = true
+        };
+
+        // Клавиатура для ответов
+        public static ReplyKeyboardMarkup replyKeyboardMarkupCancel = new(new[]
+        {
+                new KeyboardButton[] { "/cancel" },
+        })
+        {
+            ResizeKeyboard = true
+        };
+
 
         /// <summary>
         /// Пополнение очков пользователя

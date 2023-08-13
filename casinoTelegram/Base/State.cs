@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using Telegram.Bot;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace casinoTelegram
 {
@@ -65,41 +66,44 @@ namespace casinoTelegram
                 case "/start":
                     await client.SendTextMessageAsync(message.Chat.Id, "Привет! Добро пожаловать в наше казино! " +
                         "Введите /play, чтобы начать игру или /points для того, чтобы узнать своё количество очков. " +
-                        "Также, для отмены действия введите /cancel. Если возникнут проблемы, можете прописать /help");
+                        "Также, для отмены действия введите /cancel. Если возникнут проблемы, можете прописать /help", replyMarkup: Data.replyKeyboardMarkupDefault);
                     break;
                 case "/help":
                     await client.SendTextMessageAsync(message.Chat.Id, "Введите /play, чтобы начать игру или /points для того, " +
-                        "чтобы узнать своё количество очков. Также, для отмены действия введите /cancel.");
-                    SetBotState(message.Chat.Id, BotState.ChooseRange);
+                        "чтобы узнать своё количество очков. Также, для отмены действия введите /cancel.", replyMarkup: Data.replyKeyboardMarkupDefault);
+                    SetBotState(message.Chat.Id, BotState.Default);
                     break;
                 case "/play":
                     await client.SendTextMessageAsync(message.Chat.Id, "Вот список игр - \n/number - игра в угадай число.\n" +
-                        "/dice - игра в кости\n/casino - для игры в казино\n/roulette - для игры в рулетку");
+                        "/dice - игра в кости\n/casino - для игры в казино\n/roulette - для игры в рулетку", replyMarkup: Data.replyKeyboardMarkupPlay);
                     break;
                 case "/number":
-                    await client.SendTextMessageAsync(message.Chat.Id, "Выберите диапазон чисел:\n1. От 1 до 10\n2. От 1 до 100");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Выберите диапазон чисел:\n1. От 1 до 10\n2. От 1 до 100", replyMarkup: Data.replyKeyboardMarkupChoose12);
                     SetBotState(message.Chat.Id, BotState.ChooseRange);
                     break;
                 case "/dice":
-                    await client.SendTextMessageAsync(message.Chat.Id, "Выберите режим:\n1. PvE\n2. PvP");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Выберите режим:\n1. PvE\n2. PvP", replyMarkup: Data.replyKeyboardMarkupChoose12);
                     SetBotState(message.Chat.Id, BotState.GameDiceChoose);
                     break;
                 case "/casino":
-                    await client.SendTextMessageAsync(message.Chat.Id, "Выберите коэффицент ставки:\n1. 1\n2. 2\n3. 3");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Выберите коэффицент ставки:\n1. 1\n2. 2\n3. 3", replyMarkup: Data.replyKeyboardMarkupChoose123);
                     SetBotState(message.Chat.Id, BotState.CasinoRate);
                     break;
                 case "/roulette":
-                    await client.SendTextMessageAsync(message.Chat.Id, "Внесите вашу ставку");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Внесите вашу ставку", replyMarkup: Data.replyKeyboardMarkupCancel);
                     SetBotState(message.Chat.Id, BotState.RouletteRate);
                     break;
                 case "/points":
                     int points = Data.GetPointsFromDB(message.Chat.Id);
-                    await client.SendTextMessageAsync(message.Chat.Id, $"У вас {points} балл(ов).");
+                    await client.SendTextMessageAsync(message.Chat.Id, $"У вас {points} балл(ов).", replyMarkup: Data.replyKeyboardMarkupDefault);
+                    break;
+                case "/cancel":
+                    await client.SendTextMessageAsync(message.Chat.Id, $"Отмена.", replyMarkup: Data.replyKeyboardMarkupDefault);
                     break;
                 default:
                     await client.SendTextMessageAsync(message.Chat.Id, "Я не понимаю вашей команды. Введите /play для игры или /points для того, " +
                         "чтобы узнать своё количество очков. Также, для отмены действия введите /cancel. Если возникнут проблемы, " +
-                        "можете прописать /help.");
+                        "можете прописать /help.", replyMarkup: Data.replyKeyboardMarkupDefault);
                     break;
             }
         }

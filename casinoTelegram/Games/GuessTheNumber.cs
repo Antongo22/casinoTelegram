@@ -52,7 +52,7 @@ namespace casinoTelegram.Games
                     SetMaxNumber(message.Chat.Id, 10);
                     SetTardetNumber(message.Chat.Id, GetMaxNumber(message.Chat.Id));
                     await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали диапазон от 1 до {GetMaxNumber(message.Chat.Id)}. " +
-                        $"Давайте начнем игру! Отгадайте число от 1 до {GetMaxNumber(message.Chat.Id)}. Введите число:");
+                        $"Давайте начнем игру! Отгадайте число от 1 до {GetMaxNumber(message.Chat.Id)}. Введите число:", replyMarkup: Data.replyKeyboardMarkupCancel);
 
                     State.SetBotState(message.Chat.Id, State.BotState.GameUpTo10);
                     break;
@@ -60,17 +60,17 @@ namespace casinoTelegram.Games
                     SetMaxNumber(message.Chat.Id, 100);
                     SetTardetNumber(message.Chat.Id, GetMaxNumber(message.Chat.Id));
                     await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали диапазон от 1 до {GetMaxNumber(message.Chat.Id)}. " +
-                        $"Давайте начнем игру! Отгадайте число от 1 до {GetMaxNumber(message.Chat.Id)}. Введите число:");
+                        $"Давайте начнем игру! Отгадайте число от 1 до {GetMaxNumber(message.Chat.Id)}. Введите число:" , replyMarkup: Data.replyKeyboardMarkupCancel);
 
                     State.SetBotState(message.Chat.Id, State.BotState.GameTo100);
                     break;
                 case "/cancel":
-                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена", replyMarkup: Data.replyKeyboardMarkupDefault);
                     State.SetBotState(message.Chat.Id, State.BotState.Default);
                     break;
                 default:
                     await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, выберите 1 или 2 для выбора диапазона. " +
-                        "Ведите /cancel, чтобы отменить команду.");
+                        "Введите /cancel, чтобы отменить команду.");
                     break;
             }
         }
@@ -87,7 +87,7 @@ namespace casinoTelegram.Games
             {
                 if (guessedNumber == GetTargetNumber(message.Chat.Id))
                 {
-                    await client.SendTextMessageAsync(message.Chat.Id, "Поздравляю! Вы угадали число! ");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Поздравляю! Вы угадали число! ", replyMarkup: Data.replyKeyboardMarkupDefault);
 
                     Data.UpdatePointsInDB(message.Chat.Id, 1);
 
@@ -96,17 +96,17 @@ namespace casinoTelegram.Games
                 else if (guessedNumber < GetTargetNumber(message.Chat.Id))
                 {
                     await client.SendTextMessageAsync(message.Chat.Id, $"Нет, загаданное число больше {guessedNumber}. " +
-                        $"Попробуйте еще раз! Введите число:");
+                        $"Попробуйте еще раз! Введите число:" , replyMarkup: Data.replyKeyboardMarkupCancel);
                 }
                 else
                 {
                     await client.SendTextMessageAsync(message.Chat.Id, $"Нет, загаданное число меньше {guessedNumber}. " +
-                        $"Попробуйте еще раз! Введите число:");
+                        $"Попробуйте еще раз! Введите число:" , replyMarkup: Data.replyKeyboardMarkupCancel);
                 }
             }
             else if (message.Text == "/cancel")
             {
-                await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                await client.SendTextMessageAsync(message.Chat.Id, "Отмена", replyMarkup: Data.replyKeyboardMarkupDefault);
                 State.SetBotState(message.Chat.Id, State.BotState.Default);
             }
             else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число. Ведите /cancel, чтобы отменить игру.");
@@ -125,7 +125,7 @@ namespace casinoTelegram.Games
             {
                 if (guessedNumber == GetTargetNumber(message.Chat.Id))
                 {
-                    await client.SendTextMessageAsync(message.Chat.Id, "Поздравляю! Вы угадали число!");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Поздравляю! Вы угадали число!", replyMarkup: Data.replyKeyboardMarkupDefault);
 
                     Data.UpdatePointsInDB(message.Chat.Id, 1);
 
@@ -134,13 +134,13 @@ namespace casinoTelegram.Games
                 else
                 {
                     await client.SendTextMessageAsync(message.Chat.Id, $"Увы, вы не угадали. " +
-                        $"Загаданное число было - {GetTargetNumber(message.Chat.Id)}. Попробуйте еще раз!");
+                        $"Загаданное число было - {GetTargetNumber(message.Chat.Id)}. Попробуйте еще раз!", replyMarkup: Data.replyKeyboardMarkupDefault);
                     SetTardetNumber(message.Chat.Id, GetMaxNumber(message.Chat.Id));
                 }
             }
             else if (message.Text == "/cancel")
             {
-                await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                await client.SendTextMessageAsync(message.Chat.Id, "Отмена", replyMarkup: Data.replyKeyboardMarkupDefault);
                 State.SetBotState(message.Chat.Id, State.BotState.Default);
             }
             else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число. Ведите /cancel, чтобы отменить игру.");

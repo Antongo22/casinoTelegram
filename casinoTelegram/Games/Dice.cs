@@ -148,16 +148,16 @@ namespace casinoTelegram.Games
             {
                 case "1":
                     await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали игру против бота. " +
-                        $"Выбирите сколько костей кидать, 1, 2 или 3. Количество костей соответствуют ставке.");
+                        $"Выбирите сколько костей кидать, 1, 2 или 3. Количество костей соответствуют ставке.", replyMarkup: Data.replyKeyboardMarkupChoose123);
                     State.SetBotState(message.Chat.Id, State.BotState.DicePvE);
                     break;
                 case "2":
                     await client.SendTextMessageAsync(message.Chat.Id, $"Вы выбрали игру против игрока. " +
-                        $"Выбирите сколько костей кидать, 1, 2 или 3. Количество костей соответствуют ставке.");
+                        $"Выбирите сколько костей кидать, 1, 2 или 3. Количество костей соответствуют ставке.", replyMarkup: Data.replyKeyboardMarkupChoose123);
                     State.SetBotState(message.Chat.Id, State.BotState.DicePvP);
                     break;
                 case "/cancel":
-                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена", replyMarkup: Data.replyKeyboardMarkupDefault);
                     State.SetBotState(message.Chat.Id, State.BotState.Default);
                     break;
                 default:
@@ -184,7 +184,8 @@ namespace casinoTelegram.Games
                 }
                 await client.SendTextMessageAsync(message.Chat.Id, $"Вам выпало - {SetDiceP(message.Chat.Id, int.Parse(message.Text))}");
                 await client.SendTextMessageAsync(message.Chat.Id, $"Боту выпало выпало - {SetDiceE(message.Chat.Id, int.Parse(message.Text))}");
-                await client.SendTextMessageAsync(message.Chat.Id, $"Вы - {GetDiceP(message.Chat.Id)}\nБот - {GetDiceE(message.Chat.Id)}");
+                await client.SendTextMessageAsync(message.Chat.Id, $"Вы - {GetDiceP(message.Chat.Id)}\nБот - {GetDiceE(message.Chat.Id)}",
+                    replyMarkup: Data.replyKeyboardMarkupDefault);
 
                 if (GetDiceP(message.Chat.Id) > GetDiceE(message.Chat.Id))
                 {
@@ -205,7 +206,7 @@ namespace casinoTelegram.Games
             }
             else if (message.Text == "/cancel")
             {
-                await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                await client.SendTextMessageAsync(message.Chat.Id, "Отмена", replyMarkup: Data.replyKeyboardMarkupDefault);
                 State.SetBotState(message.Chat.Id, State.BotState.Default);
             }
             else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число от 1 до 3. " +
@@ -227,7 +228,8 @@ namespace casinoTelegram.Games
                     await client.SendTextMessageAsync(message.Chat.Id, "Вы не можете поставить больше, чем у вас есть!");
                     return;
                 }
-                await client.SendTextMessageAsync(message.Chat.Id, $"Ожидание игрока, как только он найдётся, игра произойдёт автоматически.");
+                await client.SendTextMessageAsync(message.Chat.Id, $"Ожидание игрока, как только он найдётся, игра произойдёт автоматически." ,
+                     replyMarkup: Data.replyKeyboardMarkupCancel);
                 SetRate(message.Chat.Id, int.Parse(message.Text));
 
                 State.SetBotState(message.Chat.Id, State.BotState.DicePvPSearch);
@@ -238,7 +240,7 @@ namespace casinoTelegram.Games
             }
             else if (message.Text == "/cancel")
             {
-                await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                await client.SendTextMessageAsync(message.Chat.Id, "Отмена", replyMarkup: Data.replyKeyboardMarkupDefault);
                 State.SetBotState(message.Chat.Id, State.BotState.Default);
             }
             else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только число от 1 до 3. " +
@@ -267,9 +269,10 @@ namespace casinoTelegram.Games
                     $"- {GetAllDiceOpponent(GetOpponentID(message.Chat.Id))}");
 
                 await client.SendTextMessageAsync(message.Chat.Id, $"Вы - {GetDiceP(message.Chat.Id)}\nП" +
-                    $"ротивник - {GetDiceOpponent(message.Chat.Id)}");
+                    $"ротивник - {GetDiceOpponent(message.Chat.Id)}", replyMarkup: Data.replyKeyboardMarkupDefault);
                 await client.SendTextMessageAsync(GetOpponentID(message.Chat.Id), $"Вы " +
-                    $"- {GetDiceP(GetOpponentID(message.Chat.Id))}\nПротивник - {GetDiceOpponent(GetOpponentID(message.Chat.Id))}");
+                    $"- {GetDiceP(GetOpponentID(message.Chat.Id))}\nПротивник - {GetDiceOpponent(GetOpponentID(message.Chat.Id))}", 
+                    replyMarkup: Data.replyKeyboardMarkupDefault);
 
 
                 if (GetDiceP(message.Chat.Id) > GetDiceOpponent(message.Chat.Id))
@@ -300,7 +303,7 @@ namespace casinoTelegram.Games
             }
             if (message.Text == "/cancel")
             {
-                await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                await client.SendTextMessageAsync(message.Chat.Id, "Отмена", replyMarkup: Data.replyKeyboardMarkupDefault);
                 State.SetBotState(message.Chat.Id, State.BotState.Default);
                 SetGemeState(message.Chat.Id, false);
             }
