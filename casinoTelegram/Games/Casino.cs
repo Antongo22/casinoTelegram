@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using Telegram.Bot;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace casinoTelegram.Games
 {
@@ -151,11 +152,11 @@ namespace casinoTelegram.Games
                 case "3":
                     SetRate(message.Chat.Id, int.Parse(message.Text));
                     await client.SendTextMessageAsync(message.Chat.Id, $"Ваш коэффицент - {Data.userStates[message.Chat.Id].rate}. " +
-                        $"Теперь, введите какое количество очков вы поставите.");          
+                        $"Теперь, введите какое количество очков вы поставите.", replyMarkup: Data.replyKeyboardMarkupCancel);          
                     State.SetBotState(message.Chat.Id, State.BotState.CasinoAllRate);                           
                     break;
                 case "/cancel":
-                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                    await client.SendTextMessageAsync(message.Chat.Id, "Отмена", replyMarkup: Data.replyKeyboardMarkupDefault);
                     State.SetBotState(message.Chat.Id, State.BotState.Default);
                     break;
                 default:
@@ -173,10 +174,11 @@ namespace casinoTelegram.Games
         /// <returns></returns>
         async public static Task HandleGameUpCasinoGame(ITelegramBotClient client, Message message)
         {
-            if (int.TryParse(message.Text, out int rate) && rate > 0)
+            if (int.TryParse(message.Text, out int rate) && rate > 0 && Data.GetPointsFromDB(message.Chat.Id) >= rate)
             {
                 SetRateCasino(message.Chat.Id, rate);
-                await client.SendTextMessageAsync(message.Chat.Id, $"Ваша ставка {Data.userStates[message.Chat.Id].rateCasino} принята. Крутим барабан");
+                await client.SendTextMessageAsync(message.Chat.Id, $"Ваша ставка {Data.userStates[message.Chat.Id].rateCasino} принята. Крутим барабан", 
+                    replyMarkup: Data.replyKeyboardMarkupDefault);
 
                 SetCasino(message.Chat.Id);
                 await client.SendTextMessageAsync(message.Chat.Id, $"Вам выпало - {GetResultCasinoSymb(message.Chat.Id)}");
@@ -192,9 +194,13 @@ namespace casinoTelegram.Games
 
                 State.SetBotState(message.Chat.Id, State.BotState.Default);
             }
+            else if (Data.GetPointsFromDB(message.Chat.Id) < rate)
+            {
+                await client.SendTextMessageAsync(message.Chat.Id, "Вы не можете поставить больше, чем у вас есть!");
+            }
             else if (message.Text == "/cancel")
             {
-                await client.SendTextMessageAsync(message.Chat.Id, "Отмена");
+                await client.SendTextMessageAsync(message.Chat.Id, "Отмена", replyMarkup: Data.replyKeyboardMarkupDefault);
                 State.SetBotState(message.Chat.Id, State.BotState.Default);
             }
             else await client.SendTextMessageAsync(message.Chat.Id, "Пожалуйста, введите только положительное, целое число. Ведите /cancel, чтобы отменить игру.");

@@ -42,9 +42,9 @@ namespace casinoTelegram
         {
             var message = update.Message;
 
-            Console.WriteLine($"{message.Chat.FirstName ?? "-no name-"}\t\t|\t{message.Text ?? "-no text-"}");
+            Console.WriteLine($"{message?.Chat.FirstName ?? "-no name-"}\t\t|\t{message?.Text ?? "-no text-"}");
 
-            if (message.Text != null)
+            if (message?.Text != null)
             {
                 switch (State.GetBotState(message.Chat.Id))
                 {
