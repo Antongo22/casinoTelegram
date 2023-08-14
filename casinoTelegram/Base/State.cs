@@ -10,6 +10,7 @@ namespace casinoTelegram
 {
     internal static class State
     {
+
         /// <summary>
         /// Определение возможных состояний бота
         /// </summary>
