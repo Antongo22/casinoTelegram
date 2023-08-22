@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
-using Telegram.Bot.Types.ReplyMarkups;
-
-namespace casinoTelegram
+﻿namespace casinoTelegram
 {
     internal static class Data
     {
@@ -34,6 +24,8 @@ namespace casinoTelegram
             public int resultCasino; // результат с казино
             public string resultCasinoSymb; // результат казино с отображением игруку
             public string rouletteParity; // чётность ставки
+            public string crashCof; // коэффицент игрока
+            public string crashGameCof; // коэффицент игры
         }
 
         // Хранение состояния для каждого пользователя
