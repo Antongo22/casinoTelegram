@@ -82,6 +82,7 @@
     <Compile Include="Base\Program.cs" />
     <Compile Include="Base\Token.cs" />
     <Compile Include="Games\Casino.cs" />
+    <Compile Include="Games\Crash.cs" />
     <Compile Include="Games\Dice.cs" />
     <Compile Include="Games\GuessTheNumber.cs" />
     <Compile Include="Games\Roulette.cs" />

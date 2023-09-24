@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram.Bot.Types;
-using Telegram.Bot;
-using Telegram.Bot.Types.ReplyMarkups;
-
-namespace casinoTelegram
+﻿namespace casinoTelegram
 {
     internal static class State
     {
+
         /// <summary>
         /// Определение возможных состояний бота
         /// </summary>
@@ -30,6 +22,8 @@ namespace casinoTelegram
             RouletteChoose, // выбор на что ставить номер или цвет
             RouletteChooseNumber, // рулетка пря выборе номера
             RouletteChooseParity, // рулетка пря выборе чётности
+            CrashSetRate, // ввод ставки в Краш
+            CrashSetCof, // коэффицент игры
         }
 
         /// <summary>
@@ -92,6 +86,10 @@ namespace casinoTelegram
                 case "/roulette":
                     await client.SendTextMessageAsync(message.Chat.Id, "Внесите вашу ставку", replyMarkup: Data.replyKeyboardMarkupCancel);
                     SetBotState(message.Chat.Id, BotState.RouletteRate);
+                    break;
+                case "/crash":
+                    await client.SendTextMessageAsync(message.Chat.Id, "Внесите вашу ставку", replyMarkup: Data.replyKeyboardMarkupCancel);
+                    SetBotState(message.Chat.Id, BotState.CrashSetRate);
                     break;
                 case "/points":
                     int points = Data.GetPointsFromDB(message.Chat.Id);

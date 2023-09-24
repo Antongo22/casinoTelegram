@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Telegram.Bot;
-using Telegram.Bot.Types;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
-using casinoTelegram.Games;
-using Dice = casinoTelegram.Games.Dice;
+﻿global using System;
+global using System.Collections.Generic;
+global using System.Threading;
+global using System.Threading.Tasks;
+global using Telegram.Bot;
+global using Telegram.Bot.Types;
+global using System.Configuration;
+global using System.Data;
+global using System.Data.SqlClient;
+global using casinoTelegram.Games;
+global using Dice = casinoTelegram.Games.Dice;
+global using Telegram.Bot.Types.ReplyMarkups;
+
 
 namespace casinoTelegram
 {
