@@ -25,7 +25,7 @@ namespace casinoTelegram
                 Console.WriteLine("База данных \"PointsDB\" подключена!");
             }
 
-            var client = new TelegramBotClient("6254402236:AAF-lAzwr4E1XjicyVw_Y6ENLNsilvAZwJM"); // создание бота с нашим токеном
+            var client = new TelegramBotClient(Token.api); // создание бота с нашим токеном
             client.StartReceiving(Update, Error); // запуск бота
             Console.WriteLine("Бот запущен. Нажмите любую клавишу, чтобы остановить.");
             Console.ReadKey(); // бот работает, пока не будет нажата любая кнопка в консоле 
